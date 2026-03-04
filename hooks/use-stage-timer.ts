@@ -31,6 +31,7 @@ export function useStageTimer(roomId: string) {
     // Initialize socket connection
     const socket = io({
       path: '/socket.io',
+      transports: ['websocket'], // Force WebSockets to avoid session affinity issues on Cloud Run
     });
     
     socketRef.current = socket;

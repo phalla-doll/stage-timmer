@@ -1,5 +1,6 @@
 import type {Metadata} from 'next';
 import { Space_Grotesk, IBM_Plex_Mono } from 'next/font/google';
+import ConvexClientProvider from './ConvexClientProvider';
 import './globals.css'; // Global styles
 
 const spaceGrotesk = Space_Grotesk({
@@ -24,7 +25,11 @@ export const metadata: Metadata = {
 export default function RootLayout({children}: {children: React.ReactNode}) {
   return (
     <html lang="en" className={`${spaceGrotesk.variable} ${ibmPlexMono.variable}`} suppressHydrationWarning>
-      <body suppressHydrationWarning>{children}</body>
+      <body suppressHydrationWarning>
+        <ConvexClientProvider>
+          {children}
+        </ConvexClientProvider>
+      </body>
     </html>
   );
 }

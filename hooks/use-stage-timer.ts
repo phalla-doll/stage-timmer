@@ -1,5 +1,7 @@
-import { useEffect, useState, useRef } from 'react';
-import { io, Socket } from 'socket.io-client';
+// @ts-nocheck
+import { useEffect, useState } from 'react';
+import { useQuery, useMutation } from 'convex/react';
+import { api } from '@/convex/_generated/api';
 
 export interface RoomState {
   mode: 'countdown' | 'countup' | 'clock';
@@ -19,63 +21,93 @@ export interface RoomState {
 }
 
 export function useStageTimer(roomId: string) {
-  const [state, setState] = useState<RoomState>({
-    mode: 'countdown',
-    duration: 300,
-    remaining: 300,
-    isRunning: false,
-    message: '',
-    messageColor: '#ffffff',
-    flash: false,
-    invertColors: false,
-    showAnimation: false,
-    signalColors: {
+  const room = useQuery(api.rooms.get, { roomId });
+  const joinRoom = useMutation(api.rooms.join);
+  const updateRoom = useMutation(api.rooms.update);
+
+  const [localRemaining, setLocalRemaining] = useState(300);
+
+  useEffect(() => {
+    if (room === undefined) return;
+    if (room === null) {
+      joinRoom({ roomId });
+      return;
+    }
+
+    let animationFrameId: number;
+
+    const tick = () => {
+      if (room.status === 'paused') {
+        setLocalRemaining(room.pausedRemaining);
+      } else {
+        const now = Date.now();
+        const elapsedSeconds = (now - room.referenceTime) / 1000;
+        if (room.mode === 'countdown') {
+          setLocalRemaining(room.pausedRemaining - elapsedSeconds);
+        } else if (room.mode === 'countup') {
+          setLocalRemaining(room.pausedRemaining + elapsedSeconds);
+        }
+      }
+      animationFrameId = requestAnimationFrame(tick);
+    };
+
+    animationFrameId = requestAnimationFrame(tick);
+    return () => cancelAnimationFrame(animationFrameId);
+  }, [room, joinRoom, roomId]);
+
+  const updateState = (newState: Partial<RoomState>) => {
+    if (!room) return;
+
+    const updates: any = { roomId };
+
+    if (newState.message !== undefined) updates.message = newState.message;
+    if (newState.messageColor !== undefined) updates.messageColor = newState.messageColor;
+    if (newState.flash !== undefined) updates.flash = newState.flash;
+    if (newState.invertColors !== undefined) updates.invertColors = newState.invertColors;
+    if (newState.showAnimation !== undefined) updates.showAnimation = newState.showAnimation;
+    if (newState.signalColors !== undefined) updates.signalColors = newState.signalColors;
+    if (newState.mode !== undefined) updates.mode = newState.mode;
+    if (newState.duration !== undefined) updates.duration = newState.duration;
+
+    // Handle play/pause
+    if (newState.isRunning !== undefined) {
+      if (newState.isRunning) {
+        updates.status = 'running';
+        updates.referenceTime = Date.now();
+        // pausedRemaining stays the same
+      } else {
+        updates.status = 'paused';
+        updates.pausedRemaining = localRemaining;
+      }
+    }
+
+    // Handle setting time manually
+    if (newState.remaining !== undefined) {
+      updates.pausedRemaining = newState.remaining;
+      if (room.status === 'running') {
+        updates.referenceTime = Date.now();
+      }
+    }
+
+    updateRoom(updates);
+  };
+
+  const state: RoomState = {
+    mode: room?.mode || 'countdown',
+    duration: room?.duration || 300,
+    remaining: room?.mode === 'countup' ? Math.floor(localRemaining) : Math.ceil(localRemaining),
+    isRunning: room?.status === 'running',
+    message: room?.message || '',
+    messageColor: room?.messageColor || '#ffffff',
+    flash: room?.flash || false,
+    invertColors: room?.invertColors || false,
+    showAnimation: room?.showAnimation || false,
+    signalColors: room?.signalColors || {
       speedUp: '#fbbf24',
       wrapUp: '#f97316',
       timesUp: '#ef4444',
     },
-  });
-  
-  const [isConnected, setIsConnected] = useState(false);
-  const socketRef = useRef<Socket | null>(null);
-
-  useEffect(() => {
-    // Initialize socket connection
-    const socket = io({
-      path: '/socket.io',
-      transports: ['websocket'], // Force WebSockets to avoid session affinity issues on Cloud Run
-    });
-    
-    socketRef.current = socket;
-
-    socket.on('connect', () => {
-      setIsConnected(true);
-      socket.emit('join-room', roomId);
-    });
-
-    socket.on('disconnect', () => {
-      setIsConnected(false);
-    });
-
-    socket.on('sync', (newState: RoomState) => {
-      setState(newState);
-    });
-
-    socket.on('tick', (remaining: number) => {
-      setState(prev => ({ ...prev, remaining }));
-    });
-
-    return () => {
-      socket.disconnect();
-    };
-  }, [roomId]);
-
-  const updateState = (newState: Partial<RoomState>) => {
-    if (socketRef.current) {
-      socketRef.current.emit('update-state', roomId, newState);
-      setState(prev => ({ ...prev, ...newState })); // Optimistic update
-    }
   };
 
-  return { state, isConnected, updateState };
+  return { state, isConnected: room !== undefined, updateState };
 }

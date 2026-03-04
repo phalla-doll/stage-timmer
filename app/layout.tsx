@@ -1,5 +1,5 @@
 import type {Metadata} from 'next';
-import { Space_Grotesk, IBM_Plex_Mono } from 'next/font/google';
+import { Space_Grotesk, Plus_Jakarta_Sans } from 'next/font/google';
 import ConvexClientProvider from './ConvexClientProvider';
 import './globals.css'; // Global styles
 
@@ -8,10 +8,9 @@ const spaceGrotesk = Space_Grotesk({
   variable: '--font-sans',
 });
 
-const ibmPlexMono = IBM_Plex_Mono({
-  weight: ['400', '500', '600', '700'],
+const plusJakartaSans = Plus_Jakarta_Sans({
   subsets: ['latin'],
-  variable: '--font-mono',
+  variable: '--font-mono', // Reusing the mono variable so existing classes work
 });
 
 export const metadata: Metadata = {
@@ -24,7 +23,7 @@ export const metadata: Metadata = {
 
 export default function RootLayout({children}: {children: React.ReactNode}) {
   return (
-    <html lang="en" className={`${spaceGrotesk.variable} ${ibmPlexMono.variable}`} suppressHydrationWarning>
+    <html lang="en" className={`${spaceGrotesk.variable} ${plusJakartaSans.variable}`} suppressHydrationWarning>
       <body suppressHydrationWarning>
         <ConvexClientProvider>
           {children}

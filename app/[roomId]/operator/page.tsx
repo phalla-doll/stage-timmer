@@ -2,8 +2,9 @@
 
 import { useParams, useRouter } from 'next/navigation';
 import { useStageTimer } from '@/hooks/use-stage-timer';
-import { Play, Pause, RotateCcw, Monitor, Settings, AlertTriangle, MessageSquare, Zap, Maximize, Minimize, Sparkles } from 'lucide-react';
+import { Play, Pause, RotateCcw, Monitor, Settings, AlertTriangle, MessageSquare, Zap, Sparkles, Share, Copy, Check, X } from 'lucide-react';
 import { useState, useEffect } from 'react';
+import QRCode from 'react-qr-code';
 
 export default function OperatorView() {
   const params = useParams();
@@ -15,28 +16,9 @@ export default function OperatorView() {
   const [inputMinutes, setInputMinutes] = useState('5');
 
   const [currentTime, setCurrentTime] = useState<Date | null>(null);
-  const [isFullscreen, setIsFullscreen] = useState(false);
   const [showColorPickers, setShowColorPickers] = useState(false);
-
-  useEffect(() => {
-    const handleFullscreenChange = () => {
-      setIsFullscreen(!!document.fullscreenElement);
-    };
-    document.addEventListener('fullscreenchange', handleFullscreenChange);
-    return () => document.removeEventListener('fullscreenchange', handleFullscreenChange);
-  }, []);
-
-  const toggleFullscreen = () => {
-    if (!document.fullscreenElement) {
-      document.documentElement.requestFullscreen().catch(err => {
-        console.error(`Error attempting to enable fullscreen: ${err.message}`);
-      });
-    } else {
-      if (document.exitFullscreen) {
-        document.exitFullscreen();
-      }
-    }
-  };
+  const [showShareModal, setShowShareModal] = useState(false);
+  const [copied, setCopied] = useState(false);
 
   useEffect(() => {
     const timer = setTimeout(() => setCurrentTime(new Date()), 0);
@@ -104,11 +86,11 @@ export default function OperatorView() {
         </div>
         <div className="flex items-center gap-3">
           <button
-            onClick={toggleFullscreen}
+            onClick={() => setShowShareModal(true)}
             className="bg-zinc-800 hover:bg-zinc-700 text-white p-2 rounded-lg transition-colors"
-            title="Toggle Fullscreen"
+            title="Share Display"
           >
-            {isFullscreen ? <Minimize className="w-5 h-5" /> : <Maximize className="w-5 h-5" />}
+            <Share className="w-5 h-5" />
           </button>
           <button
             onClick={() => window.open(`/${roomId}/display`, '_blank')}
@@ -339,6 +321,51 @@ export default function OperatorView() {
           </div>
         </div>
       </div>
+
+      {/* Share Modal */}
+      {showShareModal && (
+        <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/80 backdrop-blur-sm p-4">
+          <div className="bg-zinc-900 border border-zinc-800 rounded-3xl p-8 max-w-sm w-full flex flex-col items-center gap-6 relative">
+            <button 
+              onClick={() => setShowShareModal(false)}
+              className="absolute top-4 right-4 text-zinc-500 hover:text-white transition-colors"
+            >
+              <X className="w-6 h-6" />
+            </button>
+            
+            <div className="text-center space-y-2">
+              <h3 className="text-2xl font-bold text-white">Share Display</h3>
+              <p className="text-zinc-400 text-sm">Scan to open the display on another device</p>
+            </div>
+
+            <div className="bg-white p-4 rounded-2xl">
+              <QRCode value={`${typeof window !== 'undefined' ? window.location.origin : ''}/${roomId}/display`} size={200} />
+            </div>
+
+            <div className="w-full space-y-2">
+              <label className="text-xs font-bold text-zinc-500 uppercase tracking-wider">Display Link</label>
+              <div className="flex gap-2">
+                <input 
+                  type="text" 
+                  readOnly 
+                  value={`${typeof window !== 'undefined' ? window.location.origin : ''}/${roomId}/display`}
+                  className="flex-1 bg-zinc-950 border border-zinc-800 rounded-xl px-4 py-3 text-sm text-zinc-300 focus:outline-none"
+                />
+                <button
+                  onClick={() => {
+                    navigator.clipboard.writeText(`${window.location.origin}/${roomId}/display`);
+                    setCopied(true);
+                    setTimeout(() => setCopied(false), 2000);
+                  }}
+                  className="bg-zinc-800 hover:bg-zinc-700 px-4 py-3 rounded-xl transition-colors flex items-center justify-center"
+                >
+                  {copied ? <Check className="w-5 h-5 text-emerald-500" /> : <Copy className="w-5 h-5 text-white" />}
+                </button>
+              </div>
+            </div>
+          </div>
+        </div>
+      )}
     </div>
   );
 }

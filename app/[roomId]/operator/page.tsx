@@ -73,7 +73,7 @@ export default function OperatorView() {
   };
 
   const clearMessage = () => {
-    updateState({ message: '', messageColor: 'text-white', flash: false });
+    updateState({ message: '', messageColor: '#ffffff', flash: false });
   };
 
   const toggleFlash = () => {
@@ -187,24 +187,77 @@ export default function OperatorView() {
           <h2 className="text-2xl font-bold text-zinc-400">Signals</h2>
 
           <div className="grid grid-cols-2 gap-4">
-            <button
-              onClick={() => sendStatus('SPEED UP', 'text-amber-400')}
-              className="bg-amber-500/10 border border-amber-500/30 text-amber-400 hover:bg-amber-500/20 p-4 rounded-2xl font-bold text-lg transition-colors"
-            >
-              Speed Up
-            </button>
-            <button
-              onClick={() => sendStatus('WRAP UP', 'text-orange-500')}
-              className="bg-orange-500/10 border border-orange-500/30 text-orange-500 hover:bg-orange-500/20 p-4 rounded-2xl font-bold text-lg transition-colors"
-            >
-              Wrap Up
-            </button>
-            <button
-              onClick={() => sendStatus("TIME'S UP", 'text-red-500')}
-              className="bg-red-500/10 border border-red-500/30 text-red-500 hover:bg-red-500/20 p-4 rounded-2xl font-bold text-lg transition-colors col-span-2"
-            >
-              Time&apos;s Up
-            </button>
+            <div className="relative flex items-stretch gap-2">
+              <button
+                onClick={() => sendStatus('SPEED UP', state.signalColors.speedUp)}
+                className="flex-1 border p-4 rounded-2xl font-bold text-lg transition-colors"
+                style={{ color: state.signalColors.speedUp, borderColor: `${state.signalColors.speedUp}40`, backgroundColor: `${state.signalColors.speedUp}10` }}
+              >
+                Speed Up
+              </button>
+              <div className="relative w-12 flex-shrink-0">
+                <input
+                  type="color"
+                  value={state.signalColors.speedUp}
+                  onChange={e => updateState({ signalColors: { ...state.signalColors, speedUp: e.target.value }})}
+                  className="absolute inset-0 w-full h-full opacity-0 cursor-pointer"
+                />
+                <div
+                  className="w-full h-full rounded-2xl border flex items-center justify-center pointer-events-none"
+                  style={{ backgroundColor: `${state.signalColors.speedUp}20`, borderColor: `${state.signalColors.speedUp}40` }}
+                >
+                  <div className="w-6 h-6 rounded-full border-2 border-zinc-900" style={{ backgroundColor: state.signalColors.speedUp }} />
+                </div>
+              </div>
+            </div>
+            
+            <div className="relative flex items-stretch gap-2">
+              <button
+                onClick={() => sendStatus('WRAP UP', state.signalColors.wrapUp)}
+                className="flex-1 border p-4 rounded-2xl font-bold text-lg transition-colors"
+                style={{ color: state.signalColors.wrapUp, borderColor: `${state.signalColors.wrapUp}40`, backgroundColor: `${state.signalColors.wrapUp}10` }}
+              >
+                Wrap Up
+              </button>
+              <div className="relative w-12 flex-shrink-0">
+                <input
+                  type="color"
+                  value={state.signalColors.wrapUp}
+                  onChange={e => updateState({ signalColors: { ...state.signalColors, wrapUp: e.target.value }})}
+                  className="absolute inset-0 w-full h-full opacity-0 cursor-pointer"
+                />
+                <div
+                  className="w-full h-full rounded-2xl border flex items-center justify-center pointer-events-none"
+                  style={{ backgroundColor: `${state.signalColors.wrapUp}20`, borderColor: `${state.signalColors.wrapUp}40` }}
+                >
+                  <div className="w-6 h-6 rounded-full border-2 border-zinc-900" style={{ backgroundColor: state.signalColors.wrapUp }} />
+                </div>
+              </div>
+            </div>
+
+            <div className="relative flex items-stretch gap-2 col-span-2">
+              <button
+                onClick={() => sendStatus("TIME'S UP", state.signalColors.timesUp)}
+                className="flex-1 border p-4 rounded-2xl font-bold text-lg transition-colors"
+                style={{ color: state.signalColors.timesUp, borderColor: `${state.signalColors.timesUp}40`, backgroundColor: `${state.signalColors.timesUp}10` }}
+              >
+                Time&apos;s Up
+              </button>
+              <div className="relative w-14 flex-shrink-0">
+                <input
+                  type="color"
+                  value={state.signalColors.timesUp}
+                  onChange={e => updateState({ signalColors: { ...state.signalColors, timesUp: e.target.value }})}
+                  className="absolute inset-0 w-full h-full opacity-0 cursor-pointer"
+                />
+                <div
+                  className="w-full h-full rounded-2xl border flex items-center justify-center pointer-events-none"
+                  style={{ backgroundColor: `${state.signalColors.timesUp}20`, borderColor: `${state.signalColors.timesUp}40` }}
+                >
+                  <div className="w-6 h-6 rounded-full border-2 border-zinc-900" style={{ backgroundColor: state.signalColors.timesUp }} />
+                </div>
+              </div>
+            </div>
           </div>
 
           <div className="pt-6 border-t border-zinc-800 space-y-4">
@@ -218,7 +271,7 @@ export default function OperatorView() {
                 className="flex-1 bg-zinc-950 border border-zinc-800 rounded-xl px-4 py-3 focus:outline-none focus:border-zinc-600"
               />
               <button
-                onClick={() => sendStatus(customMsg.toUpperCase(), 'text-white')}
+                onClick={() => sendStatus(customMsg.toUpperCase(), '#ffffff')}
                 className="bg-zinc-800 hover:bg-zinc-700 px-4 py-3 rounded-xl font-bold transition-colors"
               >
                 Send

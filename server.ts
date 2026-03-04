@@ -19,6 +19,11 @@ interface RoomState {
   messageColor: string;
   flash: boolean;
   invertColors: boolean;
+  signalColors: {
+    speedUp: string;
+    wrapUp: string;
+    timesUp: string;
+  };
 }
 
 const rooms = new Map<string, RoomState>();
@@ -45,9 +50,14 @@ app.prepare().then(() => {
           remaining: 300,
           isRunning: false,
           message: '',
-          messageColor: 'text-white',
+          messageColor: '#ffffff',
           flash: false,
           invertColors: false,
+          signalColors: {
+            speedUp: '#fbbf24', // amber-400
+            wrapUp: '#f97316', // orange-500
+            timesUp: '#ef4444', // red-500
+          },
         });
       }
       socket.emit('sync', rooms.get(roomId));

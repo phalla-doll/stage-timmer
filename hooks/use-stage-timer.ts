@@ -10,6 +10,11 @@ export interface RoomState {
   messageColor: string;
   flash: boolean;
   invertColors: boolean;
+  signalColors: {
+    speedUp: string;
+    wrapUp: string;
+    timesUp: string;
+  };
 }
 
 export function useStageTimer(roomId: string) {
@@ -19,9 +24,14 @@ export function useStageTimer(roomId: string) {
     remaining: 300,
     isRunning: false,
     message: '',
-    messageColor: 'text-white',
+    messageColor: '#ffffff',
     flash: false,
     invertColors: false,
+    signalColors: {
+      speedUp: '#fbbf24',
+      wrapUp: '#f97316',
+      timesUp: '#ef4444',
+    },
   });
   
   const [isConnected, setIsConnected] = useState(false);

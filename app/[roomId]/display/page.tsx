@@ -59,7 +59,10 @@ export default function DisplayView() {
       {/* Message Area (Top) */}
       <div className="h-48 flex items-end justify-center w-full mb-12">
         {state.message && (
-          <div className={`text-6xl md:text-8xl lg:text-[8rem] font-bold tracking-tighter uppercase text-center leading-none ${state.messageColor}`}>
+          <div 
+            className="text-6xl md:text-8xl lg:text-[8rem] font-bold tracking-tighter uppercase text-center leading-none"
+            style={{ color: state.messageColor }}
+          >
             {state.message}
           </div>
         )}

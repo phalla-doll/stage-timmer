@@ -3,6 +3,7 @@
 import { useParams } from 'next/navigation';
 import { useStageTimer } from '@/hooks/use-stage-timer';
 import { useEffect, useState } from 'react';
+import { motion, AnimatePresence } from 'motion/react';
 
 export default function DisplayView() {
   const params = useParams();
@@ -68,14 +69,21 @@ export default function DisplayView() {
 
       {/* Message Area (Top) */}
       <div className="relative z-10 flex-1 flex items-center justify-center w-full">
-        {state.message && (
-          <div 
-            className="text-6xl md:text-8xl lg:text-[8rem] font-mono font-bold tracking-tighter uppercase text-center leading-none"
-            style={{ color: state.messageColor }}
-          >
-            {state.message}
-          </div>
-        )}
+        <AnimatePresence mode="wait">
+          {state.message && (
+            <motion.div 
+              key={state.message}
+              initial={{ scale: 0.9, opacity: 0 }}
+              animate={{ scale: 1, opacity: 1 }}
+              exit={{ scale: 0.95, opacity: 0 }}
+              transition={{ type: 'spring', stiffness: 300, damping: 25 }}
+              className="text-6xl md:text-8xl lg:text-[8rem] font-mono font-bold tracking-tighter uppercase text-center leading-none"
+              style={{ color: state.messageColor }}
+            >
+              {state.message}
+            </motion.div>
+          )}
+        </AnimatePresence>
       </div>
 
       {/* Timer Area (Center) */}

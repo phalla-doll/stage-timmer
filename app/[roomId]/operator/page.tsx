@@ -20,18 +20,20 @@ export default function OperatorView() {
   const [showColorPickers, setShowColorPickers] = useState(false);
   const [showShareModal, setShowShareModal] = useState(false);
   const [copied, setCopied] = useState(false);
-  const [presets, setPresets] = useState<string[]>([]);
-
-  useEffect(() => {
-    const saved = localStorage.getItem('stage-timer-presets');
-    if (saved) {
-      try {
-        setPresets(JSON.parse(saved));
-      } catch (e) {
-        console.error('Failed to parse presets', e);
+  const [presets, setPresets] = useState<string[]>(() => {
+    if (typeof window !== 'undefined') {
+      const saved = localStorage.getItem('stage-timer-presets');
+      if (saved) {
+        try {
+          return JSON.parse(saved);
+        } catch (e) {
+          console.error('Failed to parse presets', e);
+          return [];
+        }
       }
     }
-  }, []);
+    return [];
+  });
 
   const savePreset = () => {
     const msg = customMsg.trim().toUpperCase();

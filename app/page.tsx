@@ -3,6 +3,7 @@
 import { useState } from 'react';
 import { useRouter } from 'next/navigation';
 import { Monitor, Settings2 } from 'lucide-react';
+import { motion } from 'motion/react';
 
 export default function Home() {
   const [roomId, setRoomId] = useState('');
@@ -29,13 +30,14 @@ export default function Home() {
         </div>
 
         <div className="bg-zinc-900 p-8 rounded-2xl border border-zinc-800 space-y-6">
-          <button
+          <motion.button
+            whileTap={{ scale: 0.95 }}
             onClick={createRoom}
             className="w-full bg-white text-black font-bold text-lg py-4 rounded-xl hover:bg-zinc-200 transition-colors flex items-center justify-center gap-2"
           >
             <Settings2 className="w-6 h-6" />
             Create New Session
-          </button>
+          </motion.button>
 
           <div className="relative">
             <div className="absolute inset-0 flex items-center">
@@ -57,14 +59,15 @@ export default function Home() {
                 maxLength={6}
               />
             </div>
-            <button
+            <motion.button
+              whileTap={{ scale: 0.95 }}
               type="submit"
               disabled={!roomId.trim()}
               className="w-full bg-zinc-800 text-white font-bold text-lg py-4 rounded-xl hover:bg-zinc-700 transition-colors disabled:opacity-50 disabled:cursor-not-allowed flex items-center justify-center gap-2"
             >
               <Monitor className="w-6 h-6" />
               Join Session
-            </button>
+            </motion.button>
           </form>
         </div>
       </div>

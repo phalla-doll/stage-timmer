@@ -2,7 +2,7 @@
 
 import { useParams, useRouter } from 'next/navigation';
 import { useStageTimer } from '@/hooks/use-stage-timer';
-import { Play, Pause, RotateCcw, Monitor, Settings, AlertTriangle, MessageSquare, Zap } from 'lucide-react';
+import { Play, Pause, RotateCcw, Monitor, Settings, AlertTriangle, MessageSquare, Zap, Maximize, Minimize } from 'lucide-react';
 import { useState, useEffect } from 'react';
 
 export default function OperatorView() {
@@ -15,6 +15,27 @@ export default function OperatorView() {
   const [inputMinutes, setInputMinutes] = useState('5');
 
   const [currentTime, setCurrentTime] = useState<Date | null>(null);
+  const [isFullscreen, setIsFullscreen] = useState(false);
+
+  useEffect(() => {
+    const handleFullscreenChange = () => {
+      setIsFullscreen(!!document.fullscreenElement);
+    };
+    document.addEventListener('fullscreenchange', handleFullscreenChange);
+    return () => document.removeEventListener('fullscreenchange', handleFullscreenChange);
+  }, []);
+
+  const toggleFullscreen = () => {
+    if (!document.fullscreenElement) {
+      document.documentElement.requestFullscreen().catch(err => {
+        console.error(`Error attempting to enable fullscreen: ${err.message}`);
+      });
+    } else {
+      if (document.exitFullscreen) {
+        document.exitFullscreen();
+      }
+    }
+  };
 
   useEffect(() => {
     const timer = setTimeout(() => setCurrentTime(new Date()), 0);
@@ -76,13 +97,22 @@ export default function OperatorView() {
             {isConnected ? 'Connected' : 'Connecting...'}
           </div>
         </div>
-        <button
-          onClick={() => window.open(`/${roomId}/display`, '_blank')}
-          className="bg-indigo-600 hover:bg-indigo-500 text-white px-4 py-2 rounded-lg font-semibold flex items-center gap-2 transition-colors"
-        >
-          <Monitor className="w-5 h-5" />
-          Open Display
-        </button>
+        <div className="flex items-center gap-3">
+          <button
+            onClick={toggleFullscreen}
+            className="bg-zinc-800 hover:bg-zinc-700 text-white p-2 rounded-lg transition-colors"
+            title="Toggle Fullscreen"
+          >
+            {isFullscreen ? <Minimize className="w-5 h-5" /> : <Maximize className="w-5 h-5" />}
+          </button>
+          <button
+            onClick={() => window.open(`/${roomId}/display`, '_blank')}
+            className="bg-indigo-600 hover:bg-indigo-500 text-white px-4 py-2 rounded-lg font-semibold flex items-center gap-2 transition-colors"
+          >
+            <Monitor className="w-5 h-5" />
+            <span className="hidden sm:inline">Open Display</span>
+          </button>
+        </div>
       </header>
 
       <div className="grid grid-cols-1 lg:grid-cols-3 gap-6 flex-1">

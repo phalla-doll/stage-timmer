@@ -313,16 +313,6 @@ export default function OperatorView() {
                 <Plus className="w-5 h-5 text-zinc-300" />
               </button>
               <button
-                onClick={() => {
-                  clearMessage();
-                  setCustomMsg('');
-                }}
-                className="bg-zinc-800/50 hover:bg-zinc-800 text-zinc-400 hover:text-white px-4 py-3 rounded-xl font-bold transition-colors"
-                title="Clear Message"
-              >
-                Clear
-              </button>
-              <button
                 onClick={() => sendStatus(customMsg.toUpperCase(), '#ffffff')}
                 className="bg-zinc-800 hover:bg-zinc-700 px-4 py-3 rounded-xl font-bold transition-colors"
               >

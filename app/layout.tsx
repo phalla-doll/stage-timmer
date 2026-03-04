@@ -16,6 +16,9 @@ const ibmPlexMono = IBM_Plex_Mono({
 export const metadata: Metadata = {
   title: 'Stage Timer',
   description: 'A high-contrast stage timer for operators to signal speakers.',
+  icons: {
+    icon: '/favicon.svg',
+  },
 };
 
 export default function RootLayout({children}: {children: React.ReactNode}) {

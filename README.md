@@ -9,21 +9,28 @@ A professional, high-contrast stage timer application designed for event operato
   - **Countdown**: Standard timer counting down to zero (with overtime tracking).
   - **Countup**: Stopwatch style counting up from zero.
   - **Clock**: Displays the current local time.
-- **Visual Signals**: Send quick, color-coded signals to the speaker (e.g., "SPEED UP", "WRAP UP", "TIME'S UP").
-- **Custom Messaging**: Type custom messages to display instantly on the screen.
+- **Visual Signals**: Send quick, color-coded signals to the speaker (e.g., "SPEED UP", "WRAP UP", "TIME'S UP"). Signal colors can be customized via a toggleable settings menu.
+- **Custom Messaging & Presets**: 
+  - Type custom messages to display instantly on the screen.
+  - Save frequently used messages as presets for one-click sending.
+  - Presets are saved locally to your browser for future sessions.
 - **Display Effects**:
   - **Flash**: Pulses the display to grab the speaker's attention.
   - **Invert**: Flips the display to a stark white background for maximum contrast.
   - **Animate**: Adds a subtle, breathing radial gradient background when a signal is sent.
-- **Broadcast-Ready Typography**: Uses *Space Grotesk* for the UI and *IBM Plex Mono* for perfectly tabular, highly legible timer numbers.
+- **Easy Sharing**: Built-in Share modal with a scannable QR code and one-click copyable link to instantly open the display on iPads, smart TVs, or other monitors.
+- **Broadcast-Ready Typography & Layout**: 
+  - Uses *Space Grotesk* for the UI and *Plus Jakarta Sans* for perfectly tabular, highly legible timer numbers and messages.
+  - Mathematically centered flex layout ensures the timer and messages are always perfectly balanced on the Y-axis.
 
 ## Tech Stack
 
 - **Frontend**: Next.js 15 (App Router), React 19
 - **Styling**: Tailwind CSS v4
 - **Real-Time Backend & Database**: [Convex](https://convex.dev/)
+- **QR Codes**: react-qr-code
 - **Icons**: Lucide React
-- **Fonts**: Google Fonts (Space Grotesk, IBM Plex Mono)
+- **Fonts**: Google Fonts (Space Grotesk, Plus Jakarta Sans)
 
 ## Getting Started
 
@@ -73,5 +80,5 @@ This application is fully compatible with Vercel. To deploy:
 ## Usage
 
 1. **Create a Room**: Open the app and enter a custom 6-character Room Code (e.g., `MAIN01`) and click "Join Session".
-2. **Open Display**: Click the "Open Display" button in the top right corner. Move this new window to your stage monitor/confidence monitor and make it fullscreen.
-3. **Operate**: Use the Operator dashboard to start/pause the timer, change modes, and send signals to the display.
+2. **Open Display**: Click the "Share" button in the top right corner to scan the QR code on a tablet, or copy the link to open it on a stage monitor. Make the display window fullscreen.
+3. **Operate**: Use the Operator dashboard to start/pause the timer, change modes, send signals, and trigger custom message presets.

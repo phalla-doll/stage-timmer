@@ -5,6 +5,7 @@ import { useStageTimer } from '@/hooks/use-stage-timer';
 import { Play, Pause, RotateCcw, Monitor, Settings, AlertTriangle, MessageSquare, Zap, Sparkles, Share, Copy, Check, X, Plus } from 'lucide-react';
 import { useState, useEffect } from 'react';
 import QRCode from 'react-qr-code';
+import { motion } from 'motion/react';
 
 export default function OperatorView() {
   const params = useParams();
@@ -112,20 +113,22 @@ export default function OperatorView() {
           </div>
         </div>
         <div className="flex items-center gap-3">
-          <button
+          <motion.button
+            whileTap={{ scale: 0.95 }}
             onClick={() => setShowShareModal(true)}
             className="bg-zinc-800 hover:bg-zinc-700 text-white p-2 rounded-lg transition-colors"
             title="Share Display"
           >
             <Share className="w-5 h-5" />
-          </button>
-          <button
+          </motion.button>
+          <motion.button
+            whileTap={{ scale: 0.95 }}
             onClick={() => window.open(`/${roomId}/display`, '_blank')}
             className="bg-indigo-600 hover:bg-indigo-500 text-white px-4 py-2 rounded-lg font-semibold flex items-center gap-2 transition-colors"
           >
             <Monitor className="w-5 h-5" />
             <span className="hidden sm:inline">Open Display</span>
-          </button>
+          </motion.button>
         </div>
       </header>
 
@@ -136,7 +139,8 @@ export default function OperatorView() {
             <h2 className="text-2xl font-bold text-zinc-400">Timer Control</h2>
             <div className="flex bg-zinc-800 rounded-lg p-1">
               {(['countdown', 'countup', 'clock'] as const).map(m => (
-                <button
+                <motion.button
+                  whileTap={{ scale: 0.95 }}
                   key={m}
                   onClick={() => updateState({ mode: m, isRunning: false })}
                   className={`px-4 py-2 rounded-md text-sm font-bold capitalize transition-colors ${
@@ -144,7 +148,7 @@ export default function OperatorView() {
                   }`}
                 >
                   {m}
-                </button>
+                </motion.button>
               ))}
             </div>
           </div>
@@ -158,20 +162,22 @@ export default function OperatorView() {
             
             {state.mode !== 'clock' && (
               <div className="flex items-center gap-4 mt-12">
-                <button
+                <motion.button
+                  whileTap={{ scale: 0.95 }}
                   onClick={resetTimer}
                   className="w-16 h-16 rounded-full bg-zinc-800 hover:bg-zinc-700 flex items-center justify-center transition-colors"
                 >
                   <RotateCcw className="w-8 h-8" />
-                </button>
-                <button
+                </motion.button>
+                <motion.button
+                  whileTap={{ scale: 0.95 }}
                   onClick={toggleTimer}
                   className={`w-24 h-24 rounded-full flex items-center justify-center transition-colors ${
                     state.isRunning ? 'bg-amber-500 hover:bg-amber-400 text-black' : 'bg-emerald-500 hover:bg-emerald-400 text-black'
                   }`}
                 >
                   {state.isRunning ? <Pause className="w-12 h-12 fill-current" /> : <Play className="w-12 h-12 fill-current ml-2" />}
-                </button>
+                </motion.button>
               </div>
             )}
           </div>
@@ -186,12 +192,13 @@ export default function OperatorView() {
                 placeholder="Min"
               />
               <span className="text-zinc-500 font-bold">MINUTES</span>
-              <button
+              <motion.button
+                whileTap={{ scale: 0.95 }}
                 onClick={handleSetTime}
                 className="bg-zinc-800 hover:bg-zinc-700 px-6 py-3 rounded-xl font-bold transition-colors ml-auto"
               >
                 Set Time
-              </button>
+              </motion.button>
             </div>
           )}
         </div>
@@ -200,24 +207,26 @@ export default function OperatorView() {
         <div className="bg-zinc-900 rounded-3xl border border-zinc-800 p-6 flex flex-col gap-6">
           <div className="flex items-center justify-between">
             <h2 className="text-2xl font-bold text-zinc-400">Signals</h2>
-            <button 
+            <motion.button 
+              whileTap={{ scale: 0.95 }}
               onClick={() => setShowColorPickers(!showColorPickers)}
               className={`p-2 rounded-lg transition-colors ${showColorPickers ? 'bg-zinc-800 text-white' : 'text-zinc-500 hover:bg-zinc-800 hover:text-zinc-300'}`}
               title="Toggle Signal Colors"
             >
               <Settings className="w-5 h-5" />
-            </button>
+            </motion.button>
           </div>
 
           <div className="grid grid-cols-2 gap-4">
             <div className="relative flex items-stretch gap-2">
-              <button
+              <motion.button
+                whileTap={{ scale: 0.95 }}
                 onClick={() => sendStatus('SPEED UP', state.signalColors.speedUp)}
                 className="flex-1 border p-4 rounded-2xl font-bold text-lg transition-colors"
                 style={{ color: state.signalColors.speedUp, borderColor: `${state.signalColors.speedUp}40`, backgroundColor: `${state.signalColors.speedUp}10` }}
               >
                 Speed Up
-              </button>
+              </motion.button>
               {showColorPickers && (
                 <div className="relative w-12 flex-shrink-0">
                   <input
@@ -237,13 +246,14 @@ export default function OperatorView() {
             </div>
             
             <div className="relative flex items-stretch gap-2">
-              <button
+              <motion.button
+                whileTap={{ scale: 0.95 }}
                 onClick={() => sendStatus('WRAP UP', state.signalColors.wrapUp)}
                 className="flex-1 border p-4 rounded-2xl font-bold text-lg transition-colors"
                 style={{ color: state.signalColors.wrapUp, borderColor: `${state.signalColors.wrapUp}40`, backgroundColor: `${state.signalColors.wrapUp}10` }}
               >
                 Wrap Up
-              </button>
+              </motion.button>
               {showColorPickers && (
                 <div className="relative w-12 flex-shrink-0">
                   <input
@@ -263,13 +273,14 @@ export default function OperatorView() {
             </div>
 
             <div className="relative flex items-stretch gap-2 col-span-2">
-              <button
+              <motion.button
+                whileTap={{ scale: 0.95 }}
                 onClick={() => sendStatus("TIME'S UP", state.signalColors.timesUp)}
                 className="flex-1 border p-4 rounded-2xl font-bold text-lg transition-colors"
                 style={{ color: state.signalColors.timesUp, borderColor: `${state.signalColors.timesUp}40`, backgroundColor: `${state.signalColors.timesUp}10` }}
               >
                 Time&apos;s Up
-              </button>
+              </motion.button>
               {showColorPickers && (
                 <div className="relative w-14 flex-shrink-0">
                   <input
@@ -304,39 +315,43 @@ export default function OperatorView() {
                   }
                 }}
               />
-              <button
+              <motion.button
+                whileTap={{ scale: 0.95 }}
                 onClick={savePreset}
                 disabled={!customMsg.trim()}
                 className="bg-zinc-800 hover:bg-zinc-700 disabled:opacity-50 disabled:cursor-not-allowed px-3 py-3 rounded-xl transition-colors flex items-center justify-center"
                 title="Save as preset"
               >
                 <Plus className="w-5 h-5 text-zinc-300" />
-              </button>
-              <button
+              </motion.button>
+              <motion.button
+                whileTap={{ scale: 0.95 }}
                 onClick={() => sendStatus(customMsg.toUpperCase(), '#ffffff')}
                 className="bg-zinc-800 hover:bg-zinc-700 px-4 py-3 rounded-xl font-bold transition-colors"
               >
                 Send
-              </button>
+              </motion.button>
             </div>
             
             {presets.length > 0 && (
               <div className="flex flex-wrap gap-2 pt-2">
                 {presets.map(preset => (
                   <div key={preset} className="flex items-center bg-zinc-800/50 hover:bg-zinc-800 border border-zinc-700/50 rounded-lg overflow-hidden transition-colors group">
-                    <button
+                    <motion.button
+                      whileTap={{ scale: 0.95 }}
                       onClick={() => setCustomMsg(preset)}
                       className="px-3 py-1.5 text-sm text-zinc-300 hover:text-white transition-colors"
                     >
                       {preset}
-                    </button>
-                    <button
+                    </motion.button>
+                    <motion.button
+                      whileTap={{ scale: 0.95 }}
                       onClick={() => removePreset(preset)}
                       className="px-2 py-1.5 text-zinc-500 hover:text-red-400 hover:bg-zinc-700 transition-colors"
                       title="Remove preset"
                     >
                       <X className="w-3.5 h-3.5" />
-                    </button>
+                    </motion.button>
                   </div>
                 ))}
               </div>
@@ -346,7 +361,8 @@ export default function OperatorView() {
           <div className="pt-6 border-t border-zinc-800 space-y-4 mt-auto">
             <h3 className="text-sm font-bold text-zinc-500 uppercase tracking-wider">Display Effects</h3>
             <div className="grid grid-cols-3 gap-4">
-              <button
+              <motion.button
+                whileTap={{ scale: 0.95 }}
                 onClick={toggleFlash}
                 className={`p-4 rounded-2xl font-bold text-lg transition-colors flex items-center justify-center gap-2 ${
                   state.flash ? 'bg-white text-black' : 'bg-zinc-800 text-white hover:bg-zinc-700'
@@ -354,8 +370,9 @@ export default function OperatorView() {
               >
                 <Zap className="w-5 h-5" />
                 <span className="hidden sm:inline">Flash</span>
-              </button>
-              <button
+              </motion.button>
+              <motion.button
+                whileTap={{ scale: 0.95 }}
                 onClick={toggleInvert}
                 className={`p-4 rounded-2xl font-bold text-lg transition-colors flex items-center justify-center gap-2 ${
                   state.invertColors ? 'bg-white text-black' : 'bg-zinc-800 text-white hover:bg-zinc-700'
@@ -363,8 +380,9 @@ export default function OperatorView() {
               >
                 <Monitor className="w-5 h-5" />
                 <span className="hidden sm:inline">Invert</span>
-              </button>
-              <button
+              </motion.button>
+              <motion.button
+                whileTap={{ scale: 0.95 }}
                 onClick={toggleAnimation}
                 className={`p-4 rounded-2xl font-bold text-lg transition-colors flex items-center justify-center gap-2 ${
                   state.showAnimation ? 'bg-white text-black' : 'bg-zinc-800 text-white hover:bg-zinc-700'
@@ -372,14 +390,15 @@ export default function OperatorView() {
               >
                 <Sparkles className="w-5 h-5" />
                 <span className="hidden sm:inline">Animate</span>
-              </button>
+              </motion.button>
             </div>
-            <button
+            <motion.button
+              whileTap={{ scale: 0.95 }}
               onClick={clearMessage}
               className="w-full bg-zinc-800 hover:bg-zinc-700 p-4 rounded-2xl font-bold text-lg transition-colors text-zinc-400"
             >
               Clear Screen
-            </button>
+            </motion.button>
           </div>
         </div>
       </div>
@@ -388,12 +407,13 @@ export default function OperatorView() {
       {showShareModal && (
         <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/80 backdrop-blur-sm p-4">
           <div className="bg-zinc-900 border border-zinc-800 rounded-3xl p-8 max-w-sm w-full flex flex-col items-center gap-6 relative">
-            <button 
+            <motion.button 
+              whileTap={{ scale: 0.95 }}
               onClick={() => setShowShareModal(false)}
               className="absolute top-4 right-4 text-zinc-500 hover:text-white transition-colors"
             >
               <X className="w-6 h-6" />
-            </button>
+            </motion.button>
             
             <div className="text-center space-y-2">
               <h3 className="text-2xl font-bold text-white">Share Display</h3>
@@ -413,7 +433,8 @@ export default function OperatorView() {
                   value={`${typeof window !== 'undefined' ? window.location.origin : ''}/${roomId}/display`}
                   className="flex-1 bg-zinc-950 border border-zinc-800 rounded-xl px-4 py-3 text-sm text-zinc-300 focus:outline-none"
                 />
-                <button
+                <motion.button
+                  whileTap={{ scale: 0.95 }}
                   onClick={() => {
                     navigator.clipboard.writeText(`${window.location.origin}/${roomId}/display`);
                     setCopied(true);
@@ -422,7 +443,7 @@ export default function OperatorView() {
                   className="bg-zinc-800 hover:bg-zinc-700 px-4 py-3 rounded-xl transition-colors flex items-center justify-center"
                 >
                   {copied ? <Check className="w-5 h-5 text-emerald-500" /> : <Copy className="w-5 h-5 text-white" />}
-                </button>
+                </motion.button>
               </div>
             </div>
           </div>

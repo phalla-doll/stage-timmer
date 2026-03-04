@@ -1,5 +1,17 @@
 import type {Metadata} from 'next';
+import { Space_Grotesk, IBM_Plex_Mono } from 'next/font/google';
 import './globals.css'; // Global styles
+
+const spaceGrotesk = Space_Grotesk({
+  subsets: ['latin'],
+  variable: '--font-sans',
+});
+
+const ibmPlexMono = IBM_Plex_Mono({
+  weight: ['400', '500', '600', '700'],
+  subsets: ['latin'],
+  variable: '--font-mono',
+});
 
 export const metadata: Metadata = {
   title: 'Stage Timer',
@@ -8,10 +20,7 @@ export const metadata: Metadata = {
 
 export default function RootLayout({children}: {children: React.ReactNode}) {
   return (
-    <html lang="en">
-      <head>
-        <link href="https://api.fontshare.com/v2/css?f[]=satoshi@900,700,500,300,400&display=swap" rel="stylesheet" />
-      </head>
+    <html lang="en" className={`${spaceGrotesk.variable} ${ibmPlexMono.variable}`}>
       <body suppressHydrationWarning>{children}</body>
     </html>
   );

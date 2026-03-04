@@ -69,7 +69,7 @@ export default function DisplayView() {
       </div>
 
       {/* Timer Area (Center) */}
-      <div className={`text-[15vw] font-sans font-bold tracking-tighter tabular-nums leading-none ${timerColor}`}>
+      <div className={`text-[15vw] font-mono font-bold tracking-tighter tabular-nums leading-none ${timerColor}`}>
         {state.mode === 'clock' 
           ? (currentTime ? currentTime.toLocaleTimeString('en-US', { hour12: false, hour: '2-digit', minute: '2-digit', second: '2-digit' }) : '--:--:--') 
           : formatTime(state.remaining)}

@@ -102,17 +102,17 @@ export default function OperatorView() {
   return (
     <div className="min-h-screen bg-zinc-950 text-white p-4 md:p-8 font-sans flex flex-col gap-6">
       {/* Header */}
-      <header className="flex items-center justify-between bg-zinc-900 p-4 rounded-2xl border border-zinc-800">
-        <div className="flex items-center gap-4">
+      <header className="flex flex-col sm:flex-row items-center justify-between bg-zinc-900 p-4 rounded-2xl border border-zinc-800 gap-4 sm:gap-0">
+        <div className="flex items-center gap-4 w-full sm:w-auto justify-between sm:justify-start">
           <div className="bg-zinc-800 px-4 py-2 rounded-lg font-mono text-xl tracking-widest font-bold">
             {roomId}
           </div>
           <div className="flex items-center gap-2 text-sm text-zinc-400">
             <div className={`w-3 h-3 rounded-full ${isConnected ? 'bg-emerald-500' : 'bg-red-500'}`} />
-            {isConnected ? 'Connected' : 'Connecting...'}
+            <span className="hidden sm:inline">{isConnected ? 'Connected' : 'Connecting...'}</span>
           </div>
         </div>
-        <div className="flex items-center gap-3">
+        <div className="flex items-center gap-3 w-full sm:w-auto justify-end">
           <motion.button
             whileTap={{ scale: 0.95 }}
             onClick={() => setShowShareModal(true)}
@@ -134,16 +134,16 @@ export default function OperatorView() {
 
       <div className="grid grid-cols-1 lg:grid-cols-3 gap-6 flex-1">
         {/* Main Timer Controls */}
-        <div className="lg:col-span-2 bg-zinc-900 rounded-3xl border border-zinc-800 p-6 flex flex-col">
-          <div className="flex justify-between items-center mb-8">
+        <div className="lg:col-span-2 bg-zinc-900 rounded-3xl border border-zinc-800 p-4 sm:p-6 flex flex-col">
+          <div className="flex flex-col sm:flex-row justify-between items-start sm:items-center mb-8 gap-4 sm:gap-0">
             <h2 className="text-2xl font-bold text-zinc-400">Timer Control</h2>
-            <div className="flex bg-zinc-800 rounded-lg p-1">
+            <div className="flex bg-zinc-800 rounded-lg p-1 w-full sm:w-auto overflow-x-auto">
               {(['countdown', 'countup', 'clock'] as const).map(m => (
                 <motion.button
                   whileTap={{ scale: 0.95 }}
                   key={m}
                   onClick={() => updateState({ mode: m, isRunning: false })}
-                  className={`px-4 py-2 rounded-md text-sm font-bold capitalize transition-colors ${
+                  className={`flex-1 sm:flex-none px-3 sm:px-4 py-2 rounded-md text-xs sm:text-sm font-bold capitalize transition-colors whitespace-nowrap ${
                     state.mode === m ? 'bg-zinc-600 text-white' : 'text-zinc-400 hover:text-white'
                   }`}
                 >
@@ -153,8 +153,8 @@ export default function OperatorView() {
             </div>
           </div>
 
-          <div className="flex-1 flex flex-col items-center justify-center py-12">
-            <div className={`text-8xl md:text-[10rem] font-mono font-bold tracking-tighter tabular-nums leading-none ${state.remaining < 0 ? 'text-red-500' : 'text-white'}`}>
+          <div className="flex-1 flex flex-col items-center justify-center py-8 sm:py-12">
+            <div className={`text-[15vw] sm:text-8xl md:text-[10rem] font-mono font-bold tracking-tighter tabular-nums leading-none ${state.remaining < 0 ? 'text-red-500' : 'text-white'}`}>
               {state.mode === 'clock' 
                 ? (currentTime ? currentTime.toLocaleTimeString('en-US', { hour12: false, hour: '2-digit', minute: '2-digit', second: '2-digit' }) : '--:--:--') 
                 : formatTime(state.remaining)}
@@ -183,7 +183,7 @@ export default function OperatorView() {
           </div>
 
           {state.mode !== 'clock' && (
-            <div className="mt-8 pt-8 border-t border-zinc-800 flex items-center gap-4">
+            <div className="mt-8 pt-8 border-t border-zinc-800 flex flex-wrap items-center gap-4">
               <input
                 type="number"
                 value={inputMinutes}
@@ -195,7 +195,7 @@ export default function OperatorView() {
               <motion.button
                 whileTap={{ scale: 0.95 }}
                 onClick={handleSetTime}
-                className="bg-zinc-800 hover:bg-zinc-700 px-6 py-3 rounded-xl font-bold transition-colors ml-auto"
+                className="w-full sm:w-auto bg-zinc-800 hover:bg-zinc-700 px-6 py-3 rounded-xl font-bold transition-colors sm:ml-auto"
               >
                 Set Time
               </motion.button>
@@ -204,7 +204,7 @@ export default function OperatorView() {
         </div>
 
         {/* Status Controls */}
-        <div className="bg-zinc-900 rounded-3xl border border-zinc-800 p-6 flex flex-col gap-6">
+        <div className="bg-zinc-900 rounded-3xl border border-zinc-800 p-4 sm:p-6 flex flex-col gap-6">
           <div className="flex items-center justify-between">
             <h2 className="text-2xl font-bold text-zinc-400">Signals</h2>
             <motion.button 
@@ -217,7 +217,7 @@ export default function OperatorView() {
             </motion.button>
           </div>
 
-          <div className="grid grid-cols-2 gap-4">
+          <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
             <div className="relative flex items-stretch gap-2">
               <motion.button
                 whileTap={{ scale: 0.95 }}
@@ -272,7 +272,7 @@ export default function OperatorView() {
               )}
             </div>
 
-            <div className="relative flex items-stretch gap-2 col-span-2">
+            <div className="relative flex items-stretch gap-2 sm:col-span-2">
               <motion.button
                 whileTap={{ scale: 0.95 }}
                 onClick={() => sendStatus("TIME'S UP", state.signalColors.timesUp)}
@@ -360,11 +360,11 @@ export default function OperatorView() {
 
           <div className="pt-6 border-t border-zinc-800 space-y-4 mt-auto">
             <h3 className="text-sm font-bold text-zinc-500 uppercase tracking-wider">Display Effects</h3>
-            <div className="grid grid-cols-3 gap-4">
+            <div className="grid grid-cols-3 gap-2 sm:gap-4">
               <motion.button
                 whileTap={{ scale: 0.95 }}
                 onClick={toggleFlash}
-                className={`p-4 rounded-2xl font-bold text-lg transition-colors flex items-center justify-center gap-2 ${
+                className={`p-3 sm:p-4 rounded-2xl font-bold text-lg transition-colors flex items-center justify-center gap-2 ${
                   state.flash ? 'bg-white text-black' : 'bg-zinc-800 text-white hover:bg-zinc-700'
                 }`}
               >
@@ -374,7 +374,7 @@ export default function OperatorView() {
               <motion.button
                 whileTap={{ scale: 0.95 }}
                 onClick={toggleInvert}
-                className={`p-4 rounded-2xl font-bold text-lg transition-colors flex items-center justify-center gap-2 ${
+                className={`p-3 sm:p-4 rounded-2xl font-bold text-lg transition-colors flex items-center justify-center gap-2 ${
                   state.invertColors ? 'bg-white text-black' : 'bg-zinc-800 text-white hover:bg-zinc-700'
                 }`}
               >
@@ -384,7 +384,7 @@ export default function OperatorView() {
               <motion.button
                 whileTap={{ scale: 0.95 }}
                 onClick={toggleAnimation}
-                className={`p-4 rounded-2xl font-bold text-lg transition-colors flex items-center justify-center gap-2 ${
+                className={`p-3 sm:p-4 rounded-2xl font-bold text-lg transition-colors flex items-center justify-center gap-2 ${
                   state.showAnimation ? 'bg-white text-black' : 'bg-zinc-800 text-white hover:bg-zinc-700'
                 }`}
               >

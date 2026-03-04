@@ -68,7 +68,7 @@ export default function OperatorView() {
       {/* Header */}
       <header className="flex items-center justify-between bg-zinc-900 p-4 rounded-2xl border border-zinc-800">
         <div className="flex items-center gap-4">
-          <div className="bg-zinc-800 px-4 py-2 rounded-lg font-mono text-xl tracking-widest font-bold">
+          <div className="bg-zinc-800 px-4 py-2 rounded-lg font-sans text-xl tracking-widest font-bold">
             {roomId}
           </div>
           <div className="flex items-center gap-2 text-sm text-zinc-400">
@@ -106,7 +106,7 @@ export default function OperatorView() {
           </div>
 
           <div className="flex-1 flex flex-col items-center justify-center py-12">
-            <div className={`text-8xl md:text-[10rem] font-mono font-bold tracking-tighter tabular-nums leading-none ${state.remaining < 0 ? 'text-red-500' : 'text-white'}`}>
+            <div className={`text-8xl md:text-[10rem] font-sans font-bold tracking-tighter tabular-nums leading-none ${state.remaining < 0 ? 'text-red-500' : 'text-white'}`}>
               {state.mode === 'clock' 
                 ? (currentTime ? currentTime.toLocaleTimeString('en-US', { hour12: false, hour: '2-digit', minute: '2-digit', second: '2-digit' }) : '--:--:--') 
                 : formatTime(state.remaining)}
@@ -138,7 +138,7 @@ export default function OperatorView() {
                 type="number"
                 value={inputMinutes}
                 onChange={e => setInputMinutes(e.target.value)}
-                className="bg-zinc-950 border border-zinc-800 rounded-xl px-4 py-3 text-xl font-mono w-24 focus:outline-none focus:border-zinc-600"
+                className="bg-zinc-950 border border-zinc-800 rounded-xl px-4 py-3 text-xl font-sans font-bold w-24 focus:outline-none focus:border-zinc-600"
                 placeholder="Min"
               />
               <span className="text-zinc-500 font-bold">MINUTES</span>

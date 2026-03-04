@@ -16,6 +16,7 @@ export default function OperatorView() {
 
   const [currentTime, setCurrentTime] = useState<Date | null>(null);
   const [isFullscreen, setIsFullscreen] = useState(false);
+  const [showColorPickers, setShowColorPickers] = useState(false);
 
   useEffect(() => {
     const handleFullscreenChange = () => {
@@ -188,7 +189,16 @@ export default function OperatorView() {
 
         {/* Status Controls */}
         <div className="bg-zinc-900 rounded-3xl border border-zinc-800 p-6 flex flex-col gap-6">
-          <h2 className="text-2xl font-bold text-zinc-400">Signals</h2>
+          <div className="flex items-center justify-between">
+            <h2 className="text-2xl font-bold text-zinc-400">Signals</h2>
+            <button 
+              onClick={() => setShowColorPickers(!showColorPickers)}
+              className={`p-2 rounded-lg transition-colors ${showColorPickers ? 'bg-zinc-800 text-white' : 'text-zinc-500 hover:bg-zinc-800 hover:text-zinc-300'}`}
+              title="Toggle Signal Colors"
+            >
+              <Settings className="w-5 h-5" />
+            </button>
+          </div>
 
           <div className="grid grid-cols-2 gap-4">
             <div className="relative flex items-stretch gap-2">
@@ -199,20 +209,22 @@ export default function OperatorView() {
               >
                 Speed Up
               </button>
-              <div className="relative w-12 flex-shrink-0">
-                <input
-                  type="color"
-                  value={state.signalColors.speedUp}
-                  onChange={e => updateState({ signalColors: { ...state.signalColors, speedUp: e.target.value }})}
-                  className="absolute inset-0 w-full h-full opacity-0 cursor-pointer"
-                />
-                <div
-                  className="w-full h-full rounded-2xl border flex items-center justify-center pointer-events-none"
-                  style={{ backgroundColor: `${state.signalColors.speedUp}20`, borderColor: `${state.signalColors.speedUp}40` }}
-                >
-                  <div className="w-6 h-6 rounded-full border-2 border-zinc-900" style={{ backgroundColor: state.signalColors.speedUp }} />
+              {showColorPickers && (
+                <div className="relative w-12 flex-shrink-0">
+                  <input
+                    type="color"
+                    value={state.signalColors.speedUp}
+                    onChange={e => updateState({ signalColors: { ...state.signalColors, speedUp: e.target.value }})}
+                    className="absolute inset-0 w-full h-full opacity-0 cursor-pointer"
+                  />
+                  <div
+                    className="w-full h-full rounded-2xl border flex items-center justify-center pointer-events-none"
+                    style={{ backgroundColor: `${state.signalColors.speedUp}20`, borderColor: `${state.signalColors.speedUp}40` }}
+                  >
+                    <div className="w-6 h-6 rounded-full border-2 border-zinc-900" style={{ backgroundColor: state.signalColors.speedUp }} />
+                  </div>
                 </div>
-              </div>
+              )}
             </div>
             
             <div className="relative flex items-stretch gap-2">
@@ -223,20 +235,22 @@ export default function OperatorView() {
               >
                 Wrap Up
               </button>
-              <div className="relative w-12 flex-shrink-0">
-                <input
-                  type="color"
-                  value={state.signalColors.wrapUp}
-                  onChange={e => updateState({ signalColors: { ...state.signalColors, wrapUp: e.target.value }})}
-                  className="absolute inset-0 w-full h-full opacity-0 cursor-pointer"
-                />
-                <div
-                  className="w-full h-full rounded-2xl border flex items-center justify-center pointer-events-none"
-                  style={{ backgroundColor: `${state.signalColors.wrapUp}20`, borderColor: `${state.signalColors.wrapUp}40` }}
-                >
-                  <div className="w-6 h-6 rounded-full border-2 border-zinc-900" style={{ backgroundColor: state.signalColors.wrapUp }} />
+              {showColorPickers && (
+                <div className="relative w-12 flex-shrink-0">
+                  <input
+                    type="color"
+                    value={state.signalColors.wrapUp}
+                    onChange={e => updateState({ signalColors: { ...state.signalColors, wrapUp: e.target.value }})}
+                    className="absolute inset-0 w-full h-full opacity-0 cursor-pointer"
+                  />
+                  <div
+                    className="w-full h-full rounded-2xl border flex items-center justify-center pointer-events-none"
+                    style={{ backgroundColor: `${state.signalColors.wrapUp}20`, borderColor: `${state.signalColors.wrapUp}40` }}
+                  >
+                    <div className="w-6 h-6 rounded-full border-2 border-zinc-900" style={{ backgroundColor: state.signalColors.wrapUp }} />
+                  </div>
                 </div>
-              </div>
+              )}
             </div>
 
             <div className="relative flex items-stretch gap-2 col-span-2">
@@ -247,20 +261,22 @@ export default function OperatorView() {
               >
                 Time&apos;s Up
               </button>
-              <div className="relative w-14 flex-shrink-0">
-                <input
-                  type="color"
-                  value={state.signalColors.timesUp}
-                  onChange={e => updateState({ signalColors: { ...state.signalColors, timesUp: e.target.value }})}
-                  className="absolute inset-0 w-full h-full opacity-0 cursor-pointer"
-                />
-                <div
-                  className="w-full h-full rounded-2xl border flex items-center justify-center pointer-events-none"
-                  style={{ backgroundColor: `${state.signalColors.timesUp}20`, borderColor: `${state.signalColors.timesUp}40` }}
-                >
-                  <div className="w-6 h-6 rounded-full border-2 border-zinc-900" style={{ backgroundColor: state.signalColors.timesUp }} />
+              {showColorPickers && (
+                <div className="relative w-14 flex-shrink-0">
+                  <input
+                    type="color"
+                    value={state.signalColors.timesUp}
+                    onChange={e => updateState({ signalColors: { ...state.signalColors, timesUp: e.target.value }})}
+                    className="absolute inset-0 w-full h-full opacity-0 cursor-pointer"
+                  />
+                  <div
+                    className="w-full h-full rounded-2xl border flex items-center justify-center pointer-events-none"
+                    style={{ backgroundColor: `${state.signalColors.timesUp}20`, borderColor: `${state.signalColors.timesUp}40` }}
+                  >
+                    <div className="w-6 h-6 rounded-full border-2 border-zinc-900" style={{ backgroundColor: state.signalColors.timesUp }} />
+                  </div>
                 </div>
-              </div>
+              )}
             </div>
           </div>
 

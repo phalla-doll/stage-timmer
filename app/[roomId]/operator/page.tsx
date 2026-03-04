@@ -222,8 +222,8 @@ export default function OperatorView() {
               <motion.button
                 whileTap={{ scale: 0.95 }}
                 onClick={() => sendStatus('SPEED UP', state.signalColors.speedUp)}
-                className="flex-1 border p-4 rounded-2xl font-bold text-lg transition-colors"
-                style={{ color: state.signalColors.speedUp, borderColor: `${state.signalColors.speedUp}40`, backgroundColor: `${state.signalColors.speedUp}10` }}
+                className="flex-1 border-2 p-4 rounded-2xl font-bold text-lg transition-colors"
+                style={{ color: '#ffffff', borderColor: state.signalColors.speedUp, backgroundColor: `${state.signalColors.speedUp}20` }}
               >
                 Speed Up
               </motion.button>
@@ -249,8 +249,8 @@ export default function OperatorView() {
               <motion.button
                 whileTap={{ scale: 0.95 }}
                 onClick={() => sendStatus('WRAP UP', state.signalColors.wrapUp)}
-                className="flex-1 border p-4 rounded-2xl font-bold text-lg transition-colors"
-                style={{ color: state.signalColors.wrapUp, borderColor: `${state.signalColors.wrapUp}40`, backgroundColor: `${state.signalColors.wrapUp}10` }}
+                className="flex-1 border-2 p-4 rounded-2xl font-bold text-lg transition-colors"
+                style={{ color: '#ffffff', borderColor: state.signalColors.wrapUp, backgroundColor: `${state.signalColors.wrapUp}20` }}
               >
                 Wrap Up
               </motion.button>
@@ -276,8 +276,8 @@ export default function OperatorView() {
               <motion.button
                 whileTap={{ scale: 0.95 }}
                 onClick={() => sendStatus("TIME'S UP", state.signalColors.timesUp)}
-                className="flex-1 border p-4 rounded-2xl font-bold text-lg transition-colors"
-                style={{ color: state.signalColors.timesUp, borderColor: `${state.signalColors.timesUp}40`, backgroundColor: `${state.signalColors.timesUp}10` }}
+                className="flex-1 border-2 p-4 rounded-2xl font-bold text-lg transition-colors"
+                style={{ color: '#ffffff', borderColor: state.signalColors.timesUp, backgroundColor: `${state.signalColors.timesUp}20` }}
               >
                 Time&apos;s Up
               </motion.button>

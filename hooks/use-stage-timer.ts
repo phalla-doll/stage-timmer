@@ -10,6 +10,7 @@ export interface RoomState {
   messageColor: string;
   flash: boolean;
   invertColors: boolean;
+  showAnimation: boolean;
   signalColors: {
     speedUp: string;
     wrapUp: string;
@@ -27,6 +28,7 @@ export function useStageTimer(roomId: string) {
     messageColor: '#ffffff',
     flash: false,
     invertColors: false,
+    showAnimation: false,
     signalColors: {
       speedUp: '#fbbf24',
       wrapUp: '#f97316',

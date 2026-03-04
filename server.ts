@@ -19,6 +19,7 @@ interface RoomState {
   messageColor: string;
   flash: boolean;
   invertColors: boolean;
+  showAnimation: boolean;
   signalColors: {
     speedUp: string;
     wrapUp: string;
@@ -53,6 +54,7 @@ app.prepare().then(() => {
           messageColor: '#ffffff',
           flash: false,
           invertColors: false,
+          showAnimation: false,
           signalColors: {
             speedUp: '#fbbf24', // amber-400
             wrapUp: '#f97316', // orange-500

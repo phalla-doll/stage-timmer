@@ -2,7 +2,7 @@
 
 import { useParams, useRouter } from 'next/navigation';
 import { useStageTimer } from '@/hooks/use-stage-timer';
-import { Play, Pause, RotateCcw, Monitor, Settings, AlertTriangle, MessageSquare, Zap, Maximize, Minimize } from 'lucide-react';
+import { Play, Pause, RotateCcw, Monitor, Settings, AlertTriangle, MessageSquare, Zap, Maximize, Minimize, Sparkles } from 'lucide-react';
 import { useState, useEffect } from 'react';
 
 export default function OperatorView() {
@@ -82,6 +82,10 @@ export default function OperatorView() {
 
   const toggleInvert = () => {
     updateState({ invertColors: !state.invertColors });
+  };
+
+  const toggleAnimation = () => {
+    updateState({ showAnimation: !state.showAnimation });
   };
 
   return (
@@ -281,7 +285,7 @@ export default function OperatorView() {
 
           <div className="pt-6 border-t border-zinc-800 space-y-4 mt-auto">
             <h3 className="text-sm font-bold text-zinc-500 uppercase tracking-wider">Display Effects</h3>
-            <div className="grid grid-cols-2 gap-4">
+            <div className="grid grid-cols-3 gap-4">
               <button
                 onClick={toggleFlash}
                 className={`p-4 rounded-2xl font-bold text-lg transition-colors flex items-center justify-center gap-2 ${
@@ -289,7 +293,7 @@ export default function OperatorView() {
                 }`}
               >
                 <Zap className="w-5 h-5" />
-                Flash
+                <span className="hidden sm:inline">Flash</span>
               </button>
               <button
                 onClick={toggleInvert}
@@ -297,7 +301,17 @@ export default function OperatorView() {
                   state.invertColors ? 'bg-white text-black' : 'bg-zinc-800 text-white hover:bg-zinc-700'
                 }`}
               >
-                Invert
+                <Monitor className="w-5 h-5" />
+                <span className="hidden sm:inline">Invert</span>
+              </button>
+              <button
+                onClick={toggleAnimation}
+                className={`p-4 rounded-2xl font-bold text-lg transition-colors flex items-center justify-center gap-2 ${
+                  state.showAnimation ? 'bg-white text-black' : 'bg-zinc-800 text-white hover:bg-zinc-700'
+                }`}
+              >
+                <Sparkles className="w-5 h-5" />
+                <span className="hidden sm:inline">Animate</span>
               </button>
             </div>
             <button

@@ -1,0 +1,5 @@
+{
+  "name": "Stage Timer",
+  "description": "A high-contrast stage timer for operators to signal speakers.",
+  "requestFramePermissions": []
+}

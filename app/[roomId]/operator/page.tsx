@@ -1,0 +1,231 @@
+'use client';
+
+import { useParams, useRouter } from 'next/navigation';
+import { useStageTimer } from '@/hooks/use-stage-timer';
+import { Play, Pause, RotateCcw, Monitor, Settings, AlertTriangle, MessageSquare, Zap } from 'lucide-react';
+import { useState, useEffect } from 'react';
+
+export default function OperatorView() {
+  const params = useParams();
+  const roomId = params.roomId as string;
+  const router = useRouter();
+  const { state, isConnected, updateState } = useStageTimer(roomId);
+  
+  const [customMsg, setCustomMsg] = useState('');
+  const [inputMinutes, setInputMinutes] = useState('5');
+
+  const [currentTime, setCurrentTime] = useState<Date | null>(null);
+
+  useEffect(() => {
+    const timer = setTimeout(() => setCurrentTime(new Date()), 0);
+    const interval = setInterval(() => setCurrentTime(new Date()), 1000);
+    return () => {
+      clearTimeout(timer);
+      clearInterval(interval);
+    };
+  }, []);
+
+  const formatTime = (seconds: number) => {
+    const absSeconds = Math.abs(seconds);
+    const m = Math.floor(absSeconds / 60);
+    const s = absSeconds % 60;
+    const sign = seconds < 0 ? '-' : '';
+    return `${sign}${m.toString().padStart(2, '0')}:${s.toString().padStart(2, '0')}`;
+  };
+
+  const handleSetTime = () => {
+    const mins = parseInt(inputMinutes) || 0;
+    const secs = mins * 60;
+    updateState({ duration: secs, remaining: secs, isRunning: false });
+  };
+
+  const toggleTimer = () => {
+    updateState({ isRunning: !state.isRunning });
+  };
+
+  const resetTimer = () => {
+    updateState({ remaining: state.duration, isRunning: false });
+  };
+
+  const sendStatus = (msg: string, color: string) => {
+    updateState({ message: msg, messageColor: color });
+  };
+
+  const clearMessage = () => {
+    updateState({ message: '', messageColor: 'text-white', flash: false });
+  };
+
+  const toggleFlash = () => {
+    updateState({ flash: !state.flash });
+  };
+
+  const toggleInvert = () => {
+    updateState({ invertColors: !state.invertColors });
+  };
+
+  return (
+    <div className="min-h-screen bg-zinc-950 text-white p-4 md:p-8 font-sans flex flex-col gap-6">
+      {/* Header */}
+      <header className="flex items-center justify-between bg-zinc-900 p-4 rounded-2xl border border-zinc-800">
+        <div className="flex items-center gap-4">
+          <div className="bg-zinc-800 px-4 py-2 rounded-lg font-mono text-xl tracking-widest font-bold">
+            {roomId}
+          </div>
+          <div className="flex items-center gap-2 text-sm text-zinc-400">
+            <div className={`w-3 h-3 rounded-full ${isConnected ? 'bg-emerald-500' : 'bg-red-500'}`} />
+            {isConnected ? 'Connected' : 'Connecting...'}
+          </div>
+        </div>
+        <button
+          onClick={() => window.open(`/${roomId}/display`, '_blank')}
+          className="bg-indigo-600 hover:bg-indigo-500 text-white px-4 py-2 rounded-lg font-semibold flex items-center gap-2 transition-colors"
+        >
+          <Monitor className="w-5 h-5" />
+          Open Display
+        </button>
+      </header>
+
+      <div className="grid grid-cols-1 lg:grid-cols-3 gap-6 flex-1">
+        {/* Main Timer Controls */}
+        <div className="lg:col-span-2 bg-zinc-900 rounded-3xl border border-zinc-800 p-6 flex flex-col">
+          <div className="flex justify-between items-center mb-8">
+            <h2 className="text-2xl font-bold text-zinc-400">Timer Control</h2>
+            <div className="flex bg-zinc-800 rounded-lg p-1">
+              {(['countdown', 'countup', 'clock'] as const).map(m => (
+                <button
+                  key={m}
+                  onClick={() => updateState({ mode: m, isRunning: false })}
+                  className={`px-4 py-2 rounded-md text-sm font-bold capitalize transition-colors ${
+                    state.mode === m ? 'bg-zinc-600 text-white' : 'text-zinc-400 hover:text-white'
+                  }`}
+                >
+                  {m}
+                </button>
+              ))}
+            </div>
+          </div>
+
+          <div className="flex-1 flex flex-col items-center justify-center py-12">
+            <div className={`text-8xl md:text-[10rem] font-mono font-bold tracking-tighter tabular-nums leading-none ${state.remaining < 0 ? 'text-red-500' : 'text-white'}`}>
+              {state.mode === 'clock' 
+                ? (currentTime ? currentTime.toLocaleTimeString('en-US', { hour12: false, hour: '2-digit', minute: '2-digit', second: '2-digit' }) : '--:--:--') 
+                : formatTime(state.remaining)}
+            </div>
+            
+            {state.mode !== 'clock' && (
+              <div className="flex items-center gap-4 mt-12">
+                <button
+                  onClick={resetTimer}
+                  className="w-16 h-16 rounded-full bg-zinc-800 hover:bg-zinc-700 flex items-center justify-center transition-colors"
+                >
+                  <RotateCcw className="w-8 h-8" />
+                </button>
+                <button
+                  onClick={toggleTimer}
+                  className={`w-24 h-24 rounded-full flex items-center justify-center transition-colors ${
+                    state.isRunning ? 'bg-amber-500 hover:bg-amber-400 text-black' : 'bg-emerald-500 hover:bg-emerald-400 text-black'
+                  }`}
+                >
+                  {state.isRunning ? <Pause className="w-12 h-12 fill-current" /> : <Play className="w-12 h-12 fill-current ml-2" />}
+                </button>
+              </div>
+            )}
+          </div>
+
+          {state.mode !== 'clock' && (
+            <div className="mt-8 pt-8 border-t border-zinc-800 flex items-center gap-4">
+              <input
+                type="number"
+                value={inputMinutes}
+                onChange={e => setInputMinutes(e.target.value)}
+                className="bg-zinc-950 border border-zinc-800 rounded-xl px-4 py-3 text-xl font-mono w-24 focus:outline-none focus:border-zinc-600"
+                placeholder="Min"
+              />
+              <span className="text-zinc-500 font-bold">MINUTES</span>
+              <button
+                onClick={handleSetTime}
+                className="bg-zinc-800 hover:bg-zinc-700 px-6 py-3 rounded-xl font-bold transition-colors ml-auto"
+              >
+                Set Time
+              </button>
+            </div>
+          )}
+        </div>
+
+        {/* Status Controls */}
+        <div className="bg-zinc-900 rounded-3xl border border-zinc-800 p-6 flex flex-col gap-6">
+          <h2 className="text-2xl font-bold text-zinc-400">Signals</h2>
+
+          <div className="grid grid-cols-2 gap-4">
+            <button
+              onClick={() => sendStatus('SPEED UP', 'text-amber-400')}
+              className="bg-amber-500/10 border border-amber-500/30 text-amber-400 hover:bg-amber-500/20 p-4 rounded-2xl font-bold text-lg transition-colors"
+            >
+              Speed Up
+            </button>
+            <button
+              onClick={() => sendStatus('WRAP UP', 'text-orange-500')}
+              className="bg-orange-500/10 border border-orange-500/30 text-orange-500 hover:bg-orange-500/20 p-4 rounded-2xl font-bold text-lg transition-colors"
+            >
+              Wrap Up
+            </button>
+            <button
+              onClick={() => sendStatus("TIME'S UP", 'text-red-500')}
+              className="bg-red-500/10 border border-red-500/30 text-red-500 hover:bg-red-500/20 p-4 rounded-2xl font-bold text-lg transition-colors col-span-2"
+            >
+              Time&apos;s Up
+            </button>
+          </div>
+
+          <div className="pt-6 border-t border-zinc-800 space-y-4">
+            <h3 className="text-sm font-bold text-zinc-500 uppercase tracking-wider">Custom Message</h3>
+            <div className="flex gap-2">
+              <input
+                type="text"
+                value={customMsg}
+                onChange={e => setCustomMsg(e.target.value)}
+                placeholder="Enter message..."
+                className="flex-1 bg-zinc-950 border border-zinc-800 rounded-xl px-4 py-3 focus:outline-none focus:border-zinc-600"
+              />
+              <button
+                onClick={() => sendStatus(customMsg.toUpperCase(), 'text-white')}
+                className="bg-zinc-800 hover:bg-zinc-700 px-4 py-3 rounded-xl font-bold transition-colors"
+              >
+                Send
+              </button>
+            </div>
+          </div>
+
+          <div className="pt-6 border-t border-zinc-800 space-y-4 mt-auto">
+            <h3 className="text-sm font-bold text-zinc-500 uppercase tracking-wider">Display Effects</h3>
+            <div className="grid grid-cols-2 gap-4">
+              <button
+                onClick={toggleFlash}
+                className={`p-4 rounded-2xl font-bold text-lg transition-colors flex items-center justify-center gap-2 ${
+                  state.flash ? 'bg-white text-black' : 'bg-zinc-800 text-white hover:bg-zinc-700'
+                }`}
+              >
+                <Zap className="w-5 h-5" />
+                Flash
+              </button>
+              <button
+                onClick={toggleInvert}
+                className={`p-4 rounded-2xl font-bold text-lg transition-colors flex items-center justify-center gap-2 ${
+                  state.invertColors ? 'bg-white text-black' : 'bg-zinc-800 text-white hover:bg-zinc-700'
+                }`}
+              >
+                Invert
+              </button>
+            </div>
+            <button
+              onClick={clearMessage}
+              className="w-full bg-zinc-800 hover:bg-zinc-700 p-4 rounded-2xl font-bold text-lg transition-colors text-zinc-400"
+            >
+              Clear Screen
+            </button>
+          </div>
+        </div>
+      </div>
+    </div>
+  );
+}

@@ -54,7 +54,7 @@ export default function DisplayView() {
   const timerColor = isOvertime ? 'text-red-500' : textClass;
 
   return (
-    <div className={`relative overflow-hidden min-h-screen ${bgClass} ${textClass} flex flex-col items-center justify-center p-8 font-sans transition-colors duration-300 ${isFlashing ? 'opacity-0' : 'opacity-100'}`}>
+    <div className={`relative overflow-hidden min-h-screen ${bgClass} ${textClass} flex flex-col items-center justify-between p-8 font-sans transition-colors duration-300 ${isFlashing ? 'opacity-0' : 'opacity-100'}`}>
       
       {/* Animated Background Layer */}
       {state.showAnimation && state.message && (
@@ -67,7 +67,7 @@ export default function DisplayView() {
       )}
 
       {/* Message Area (Top) */}
-      <div className="relative z-10 h-48 flex items-end justify-center w-full mb-12">
+      <div className="relative z-10 flex-1 flex items-start justify-center w-full pt-4 md:pt-12">
         {state.message && (
           <div 
             className="text-6xl md:text-8xl lg:text-[8rem] font-bold tracking-tighter uppercase text-center leading-none"
@@ -79,21 +79,23 @@ export default function DisplayView() {
       </div>
 
       {/* Timer Area (Center) */}
-      <div className={`relative z-10 text-[15vw] font-mono font-bold tracking-tighter tabular-nums leading-none ${timerColor}`}>
+      <div className={`relative z-10 flex-none text-[15vw] font-mono font-bold tracking-tighter tabular-nums leading-none ${timerColor}`}>
         {state.mode === 'clock' 
           ? (currentTime ? currentTime.toLocaleTimeString('en-US', { hour12: false, hour: '2-digit', minute: '2-digit', second: '2-digit' }) : '--:--:--') 
           : formatTime(state.remaining)}
       </div>
 
       {/* Progress Bar (Bottom) */}
-      {state.mode !== 'clock' && state.duration > 0 && (
-        <div className="relative z-10 w-full max-w-5xl h-4 bg-zinc-800 rounded-full mt-24 overflow-hidden">
-          <div 
-            className={`h-full transition-all duration-1000 ease-linear ${isOvertime ? 'bg-red-500' : 'bg-emerald-500'}`}
-            style={{ width: `${Math.min(100, Math.max(0, (state.remaining / state.duration) * 100))}%` }}
-          />
-        </div>
-      )}
+      <div className="relative z-10 flex-1 flex items-end justify-center w-full pb-4 md:pb-12">
+        {state.mode !== 'clock' && state.duration > 0 && (
+          <div className="w-full max-w-5xl h-4 bg-zinc-800 rounded-full overflow-hidden">
+            <div 
+              className={`h-full transition-all duration-1000 ease-linear ${isOvertime ? 'bg-red-500' : 'bg-emerald-500'}`}
+              style={{ width: `${Math.min(100, Math.max(0, (state.remaining / state.duration) * 100))}%` }}
+            />
+          </div>
+        )}
+      </div>
     </div>
   );
 }

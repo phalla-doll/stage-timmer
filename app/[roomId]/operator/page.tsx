@@ -273,6 +273,16 @@ export default function OperatorView() {
                 className="flex-1 bg-zinc-950 border border-zinc-800 rounded-xl px-4 py-3 focus:outline-none focus:border-zinc-600"
               />
               <button
+                onClick={() => {
+                  clearMessage();
+                  setCustomMsg('');
+                }}
+                className="bg-zinc-800/50 hover:bg-zinc-800 text-zinc-400 hover:text-white px-4 py-3 rounded-xl font-bold transition-colors"
+                title="Clear Message"
+              >
+                Clear
+              </button>
+              <button
                 onClick={() => sendStatus(customMsg.toUpperCase(), '#ffffff')}
                 className="bg-zinc-800 hover:bg-zinc-700 px-4 py-3 rounded-xl font-bold transition-colors"
               >

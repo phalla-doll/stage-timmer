@@ -2,7 +2,7 @@
 
 import { useParams, useRouter } from 'next/navigation';
 import { useStageTimer } from '@/hooks/use-stage-timer';
-import { Play, Pause, RotateCcw, Monitor, Settings, AlertTriangle, MessageSquare, Zap, Sparkles, Share, Copy, Check, X } from 'lucide-react';
+import { Play, Pause, RotateCcw, Monitor, Settings, AlertTriangle, MessageSquare, Zap, Sparkles, Share, Copy, Check, X, Plus } from 'lucide-react';
 import { useState, useEffect } from 'react';
 import QRCode from 'react-qr-code';
 
@@ -19,6 +19,33 @@ export default function OperatorView() {
   const [showColorPickers, setShowColorPickers] = useState(false);
   const [showShareModal, setShowShareModal] = useState(false);
   const [copied, setCopied] = useState(false);
+  const [presets, setPresets] = useState<string[]>([]);
+
+  useEffect(() => {
+    const saved = localStorage.getItem('stage-timer-presets');
+    if (saved) {
+      try {
+        setPresets(JSON.parse(saved));
+      } catch (e) {
+        console.error('Failed to parse presets', e);
+      }
+    }
+  }, []);
+
+  const savePreset = () => {
+    const msg = customMsg.trim().toUpperCase();
+    if (msg && !presets.includes(msg)) {
+      const newPresets = [...presets, msg];
+      setPresets(newPresets);
+      localStorage.setItem('stage-timer-presets', JSON.stringify(newPresets));
+    }
+  };
+
+  const removePreset = (preset: string) => {
+    const newPresets = presets.filter(p => p !== preset);
+    setPresets(newPresets);
+    localStorage.setItem('stage-timer-presets', JSON.stringify(newPresets));
+  };
 
   useEffect(() => {
     const timer = setTimeout(() => setCurrentTime(new Date()), 0);
@@ -271,7 +298,20 @@ export default function OperatorView() {
                 onChange={e => setCustomMsg(e.target.value)}
                 placeholder="Enter message..."
                 className="flex-1 bg-zinc-950 border border-zinc-800 rounded-xl px-4 py-3 focus:outline-none focus:border-zinc-600"
+                onKeyDown={e => {
+                  if (e.key === 'Enter') {
+                    sendStatus(customMsg.toUpperCase(), '#ffffff');
+                  }
+                }}
               />
+              <button
+                onClick={savePreset}
+                disabled={!customMsg.trim()}
+                className="bg-zinc-800 hover:bg-zinc-700 disabled:opacity-50 disabled:cursor-not-allowed px-3 py-3 rounded-xl transition-colors flex items-center justify-center"
+                title="Save as preset"
+              >
+                <Plus className="w-5 h-5 text-zinc-300" />
+              </button>
               <button
                 onClick={() => {
                   clearMessage();
@@ -289,6 +329,28 @@ export default function OperatorView() {
                 Send
               </button>
             </div>
+            
+            {presets.length > 0 && (
+              <div className="flex flex-wrap gap-2 pt-2">
+                {presets.map(preset => (
+                  <div key={preset} className="flex items-center bg-zinc-800/50 hover:bg-zinc-800 border border-zinc-700/50 rounded-lg overflow-hidden transition-colors group">
+                    <button
+                      onClick={() => setCustomMsg(preset)}
+                      className="px-3 py-1.5 text-sm text-zinc-300 hover:text-white transition-colors"
+                    >
+                      {preset}
+                    </button>
+                    <button
+                      onClick={() => removePreset(preset)}
+                      className="px-2 py-1.5 text-zinc-500 hover:text-red-400 hover:bg-zinc-700 transition-colors"
+                      title="Remove preset"
+                    >
+                      <X className="w-3.5 h-3.5" />
+                    </button>
+                  </div>
+                ))}
+              </div>
+            )}
           </div>
 
           <div className="pt-6 border-t border-zinc-800 space-y-4 mt-auto">

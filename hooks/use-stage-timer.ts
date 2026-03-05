@@ -1,4 +1,4 @@
-import { useEffect, useState } from 'react';
+import { useEffect, useRef, useState } from 'react';
 import { useQuery, useMutation } from 'convex/react';
 import { api } from '@/convex/_generated/api';
 
@@ -26,6 +26,7 @@ export function useStageTimer(roomId: string) {
 
   const [localRemaining, setLocalRemaining] = useState(300);
   const [error, setError] = useState<string | null>(null);
+  const errorRef = useRef<string | null>(null);
 
   useEffect(() => {
     if (room === undefined) return;
@@ -34,7 +35,7 @@ export function useStageTimer(roomId: string) {
         joinRoom({ roomId });
       } catch (err) {
         console.error('Error joining room:', err);
-        setError('Failed to join room. Please try again.');
+        errorRef.current = 'Failed to join room. Please try again.';
       }
       return;
     }
@@ -59,6 +60,12 @@ export function useStageTimer(roomId: string) {
     animationFrameId = requestAnimationFrame(tick);
     return () => cancelAnimationFrame(animationFrameId);
   }, [room, joinRoom, roomId]);
+
+  useEffect(() => {
+    if (errorRef.current) {
+      setError(errorRef.current);
+    }
+  }, []);
 
   const updateState = (newState: Partial<RoomState>) => {
     if (!room) return;

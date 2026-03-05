@@ -41,18 +41,18 @@ export default function OperatorView() {
   const [showColorPickers, setShowColorPickers] = useState(false);
   const [showShareModal, setShowShareModal] = useState(false);
   const [copied, setCopied] = useState(false);
-  const [presets, setPresets] = useState<string[]>([]);
-
-  useEffect(() => {
+  const [presets, setPresets] = useState<string[]>(() => {
     const saved = localStorage.getItem('stage-timer-presets');
     if (saved) {
       try {
-        setPresets(JSON.parse(saved));
+        return JSON.parse(saved);
       } catch (e) {
         console.error('Failed to parse presets', e);
+        return [];
       }
     }
-  }, []);
+    return [];
+  });
 
   useEffect(() => {
     startSessionTracking(roomId);
@@ -154,12 +154,12 @@ export default function OperatorView() {
             <motion.button
               whileTap={{ scale: 0.95 }}
               onClick={() => router.push('/')}
-              className="bg-zinc-800 hover:bg-zinc-700 text-zinc-400 hover:text-white px-4 py-2 rounded-lg transition-colors"
+              className="bg-zinc-800 hover:bg-zinc-700 text-zinc-400 hover:text-white p-2.5 rounded-lg transition-colors"
               title="Back to Home"
             >
               <HugeiconsIcon icon={Home01Icon} size={20} strokeWidth={1.5} />
             </motion.button>
-            <div className="bg-zinc-800 px-4 py-2 rounded-lg font-mono text-xl tracking-widest font-bold">
+            <div className="bg-zinc-800 px-4 py-1.5 rounded-lg font-mono text-xl tracking-widest font-bold">
               {roomId}
             </div>
           </div>
@@ -175,7 +175,7 @@ export default function OperatorView() {
               trackShareModalOpened(roomId);
               setShowShareModal(true);
             }}
-            className="bg-zinc-800 hover:bg-zinc-700 text-white px-4 py-2 rounded-lg transition-colors"
+            className="bg-zinc-800 hover:bg-zinc-700 text-white p-2.5 rounded-lg transition-colors"
             title="Share Display"
           >
             <HugeiconsIcon icon={Share01Icon} size={20} strokeWidth={1.5} />

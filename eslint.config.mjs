@@ -8,4 +8,6 @@ const __dirname = path.dirname(__filename);
 
 export default defineConfig([{
     extends: [...next],
-}]);
+}], {
+    ignores: ["convex/_generated/**"],
+});

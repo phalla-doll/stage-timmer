@@ -1,26 +1,37 @@
 "use client";
 import { ConvexProvider, ConvexReactClient } from "convex/react";
-import { ReactNode, useEffect, useState } from "react";
+import { ReactNode, useEffect, useRef, useState } from "react";
 
 export default function ConvexClientProvider({ children }: { children: ReactNode }) {
   const [error, setError] = useState<string | null>(null);
   const [client, setClient] = useState<ConvexReactClient | null>(null);
+  const errorRef = useRef<string | null>(null);
+  const clientRef = useRef<ConvexReactClient | null>(null);
 
   useEffect(() => {
     try {
       const convexUrl = process.env.NEXT_PUBLIC_CONVEX_URL;
       
       if (!convexUrl || convexUrl === "https://placeholder-url.convex.cloud") {
-        setError("NEXT_PUBLIC_CONVEX_URL is not configured. Please set this environment variable in Vercel.");
+        errorRef.current = "NEXT_PUBLIC_CONVEX_URL is not configured. Please set this environment variable in Vercel.";
         return;
       }
 
       const convexClient = new ConvexReactClient(convexUrl);
-      setClient(convexClient);
+      clientRef.current = convexClient;
     } catch (err) {
       const errorMessage = err instanceof Error ? err.message : "Failed to initialize Convex client";
       console.error("Convex initialization error:", err);
-      setError(errorMessage);
+      errorRef.current = errorMessage;
+    }
+  }, []);
+
+  useEffect(() => {
+    if (clientRef.current) {
+      setClient(clientRef.current);
+    }
+    if (errorRef.current) {
+      setError(errorRef.current);
     }
   }, []);
 

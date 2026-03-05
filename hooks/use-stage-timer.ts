@@ -26,11 +26,17 @@ export function useStageTimer(roomId: string) {
   const updateRoom = useMutation(api.rooms.update);
 
   const [localRemaining, setLocalRemaining] = useState(300);
+  const [error, setError] = useState<string | null>(null);
 
   useEffect(() => {
     if (room === undefined) return;
     if (room === null) {
-      joinRoom({ roomId });
+      try {
+        joinRoom({ roomId });
+      } catch (err) {
+        console.error('Error joining room:', err);
+        setError('Failed to join room. Please try again.');
+      }
       return;
     }
 
@@ -58,38 +64,43 @@ export function useStageTimer(roomId: string) {
   const updateState = (newState: Partial<RoomState>) => {
     if (!room) return;
 
-    const updates: any = { roomId };
+    try {
+      const updates: any = { roomId };
 
-    if (newState.message !== undefined) updates.message = newState.message;
-    if (newState.messageColor !== undefined) updates.messageColor = newState.messageColor;
-    if (newState.flash !== undefined) updates.flash = newState.flash;
-    if (newState.invertColors !== undefined) updates.invertColors = newState.invertColors;
-    if (newState.showAnimation !== undefined) updates.showAnimation = newState.showAnimation;
-    if (newState.signalColors !== undefined) updates.signalColors = newState.signalColors;
-    if (newState.mode !== undefined) updates.mode = newState.mode;
-    if (newState.duration !== undefined) updates.duration = newState.duration;
+      if (newState.message !== undefined) updates.message = newState.message;
+      if (newState.messageColor !== undefined) updates.messageColor = newState.messageColor;
+      if (newState.flash !== undefined) updates.flash = newState.flash;
+      if (newState.invertColors !== undefined) updates.invertColors = newState.invertColors;
+      if (newState.showAnimation !== undefined) updates.showAnimation = newState.showAnimation;
+      if (newState.signalColors !== undefined) updates.signalColors = newState.signalColors;
+      if (newState.mode !== undefined) updates.mode = newState.mode;
+      if (newState.duration !== undefined) updates.duration = newState.duration;
 
-    // Handle play/pause
-    if (newState.isRunning !== undefined) {
-      if (newState.isRunning) {
-        updates.status = 'running';
-        updates.referenceTime = Date.now();
-        // pausedRemaining stays the same
-      } else {
-        updates.status = 'paused';
-        updates.pausedRemaining = localRemaining;
+      // Handle play/pause
+      if (newState.isRunning !== undefined) {
+        if (newState.isRunning) {
+          updates.status = 'running';
+          updates.referenceTime = Date.now();
+          // pausedRemaining stays the same
+        } else {
+          updates.status = 'paused';
+          updates.pausedRemaining = localRemaining;
+        }
       }
-    }
 
-    // Handle setting time manually
-    if (newState.remaining !== undefined) {
-      updates.pausedRemaining = newState.remaining;
-      if (room.status === 'running') {
-        updates.referenceTime = Date.now();
+      // Handle setting time manually
+      if (newState.remaining !== undefined) {
+        updates.pausedRemaining = newState.remaining;
+        if (room.status === 'running') {
+          updates.referenceTime = Date.now();
+        }
       }
-    }
 
-    updateRoom(updates);
+      updateRoom(updates);
+    } catch (err) {
+      console.error('Error updating room state:', err);
+      setError('Failed to update room state. Please try again.');
+    }
   };
 
   const state: RoomState = {
@@ -109,5 +120,5 @@ export function useStageTimer(roomId: string) {
     },
   };
 
-  return { state, isConnected: room !== undefined, updateState };
+  return { state, isConnected: room !== undefined, updateState, error };
 }

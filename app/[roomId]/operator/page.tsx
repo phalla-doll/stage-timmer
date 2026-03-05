@@ -162,9 +162,7 @@ export default function OperatorView() {
             >
               <HugeiconsIcon icon={Home01Icon} size={20} strokeWidth={1.5} />
             </motion.button>
-            <div className="bg-zinc-800 px-4 py-1.5 rounded-lg font-mono text-xl tracking-widest font-bold">
-              {roomId}
-            </div>
+            <h1 className="text-5xl font-bold tracking-tighter text-wrap: balance">STAGE TIMER</h1>
           </div>
           <div className="flex items-center gap-2 text-sm text-zinc-400">
             <div className={`w-3 h-3 rounded-full ${isConnected ? 'bg-emerald-500' : 'bg-red-500'}`} />
@@ -178,11 +176,14 @@ export default function OperatorView() {
               trackShareModalOpened(roomId);
               setShowShareModal(true);
             }}
-            className="bg-zinc-800 hover:bg-zinc-700 text-white p-2.5 rounded-lg transition-colors"
+            className="bg-zinc-800 hover:bg-zinc-700 text-white p-2.5 rounded-lg transition-colors flex items-center gap-2"
             title="Share Display"
             aria-label="Share Display"
           >
             <HugeiconsIcon icon={Share01Icon} size={20} strokeWidth={1.5} />
+            <div className="bg-zinc-700 px-4 py-1.5 rounded-lg font-mono text-xl tracking-widest font-bold">
+              {roomId}
+            </div>
           </motion.button>
           <motion.button
             whileTap={{ scale: 0.95 }}

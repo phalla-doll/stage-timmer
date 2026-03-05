@@ -6,6 +6,26 @@ import { Play, Pause, RotateCcw, Monitor, Settings, AlertTriangle, MessageSquare
 import { useState, useEffect } from 'react';
 import QRCode from 'react-qr-code';
 import { motion } from 'motion/react';
+import {
+  startSessionTracking,
+  endSessionTracking,
+  trackTimerModeChanged,
+  trackTimerStarted,
+  trackTimerPaused,
+  trackTimerReset,
+  trackTimerSet,
+  trackSignalSent,
+  trackCustomMessageSent,
+  trackPresetSaved,
+  trackPresetRemoved,
+  trackPresetUsed,
+  trackEffectToggled,
+  trackScreenCleared,
+  trackColorCustomized,
+  trackShareModalOpened,
+  trackShareLinkCopied,
+  trackDisplayOpened,
+} from '@/lib/analytics';
 
 export default function OperatorView() {
   const params = useParams();
@@ -33,12 +53,20 @@ export default function OperatorView() {
     }
   }, []);
 
+  useEffect(() => {
+    startSessionTracking(roomId);
+    return () => {
+      endSessionTracking();
+    };
+  }, [roomId]);
+
   const savePreset = () => {
     const msg = customMsg.trim().toUpperCase();
     if (msg && !presets.includes(msg)) {
       const newPresets = [...presets, msg];
       setPresets(newPresets);
       localStorage.setItem('stage-timer-presets', JSON.stringify(newPresets));
+      trackPresetSaved(msg);
     }
   };
 
@@ -46,6 +74,7 @@ export default function OperatorView() {
     const newPresets = presets.filter(p => p !== preset);
     setPresets(newPresets);
     localStorage.setItem('stage-timer-presets', JSON.stringify(newPresets));
+    trackPresetRemoved(preset);
   };
 
   useEffect(() => {
@@ -68,34 +97,50 @@ export default function OperatorView() {
   const handleSetTime = () => {
     const mins = parseInt(inputMinutes) || 0;
     const secs = mins * 60;
+    trackTimerSet(mins);
     updateState({ duration: secs, remaining: secs, isRunning: false });
   };
 
   const toggleTimer = () => {
-    updateState({ isRunning: !state.isRunning });
+    const isRunning = !state.isRunning;
+    if (isRunning) {
+      trackTimerStarted(state.mode, state.duration);
+    } else {
+      trackTimerPaused(state.mode, state.remaining);
+    }
+    updateState({ isRunning });
   };
 
   const resetTimer = () => {
+    trackTimerReset(state.mode);
     updateState({ remaining: state.duration, isRunning: false });
   };
 
   const sendStatus = (msg: string, color: string) => {
+    const signalType = msg === 'SPEED UP' ? 'speed_up' :
+                      msg === 'WRAP UP' ? 'wrap_up' :
+                      msg === "TIME'S UP" ? 'times_up' : 'custom';
+    trackSignalSent(signalType, msg, color);
     updateState({ message: msg, messageColor: color });
   };
 
   const clearMessage = () => {
+    trackScreenCleared();
     updateState({ message: '', messageColor: '#ffffff', flash: false });
   };
 
   const toggleFlash = () => {
+    trackEffectToggled('flash', !state.flash);
     updateState({ flash: !state.flash });
   };
 
   const toggleInvert = () => {
+    trackEffectToggled('invert', !state.invertColors);
     updateState({ invertColors: !state.invertColors });
   };
 
   const toggleAnimation = () => {
+    trackEffectToggled('animate', !state.showAnimation);
     updateState({ showAnimation: !state.showAnimation });
   };
 
@@ -125,7 +170,10 @@ export default function OperatorView() {
         <div className="flex items-center gap-3 w-full sm:w-auto justify-end">
           <motion.button
             whileTap={{ scale: 0.95 }}
-            onClick={() => setShowShareModal(true)}
+            onClick={() => {
+              trackShareModalOpened(roomId);
+              setShowShareModal(true);
+            }}
             className="bg-zinc-800 hover:bg-zinc-700 text-white p-2 rounded-lg transition-colors"
             title="Share Display"
           >
@@ -133,7 +181,10 @@ export default function OperatorView() {
           </motion.button>
           <motion.button
             whileTap={{ scale: 0.95 }}
-            onClick={() => window.open(`/${roomId}/display`, '_blank')}
+            onClick={() => {
+              trackDisplayOpened(roomId);
+              window.open(`/${roomId}/display`, '_blank');
+            }}
             className="bg-indigo-600 hover:bg-indigo-500 text-white px-4 py-2 rounded-lg font-semibold flex items-center gap-2 transition-colors"
           >
             <Monitor className="w-5 h-5" />
@@ -152,7 +203,10 @@ export default function OperatorView() {
                 <motion.button
                   whileTap={{ scale: 0.95 }}
                   key={m}
-                  onClick={() => updateState({ mode: m, isRunning: false })}
+                  onClick={() => {
+                    trackTimerModeChanged(m);
+                    updateState({ mode: m, isRunning: false });
+                  }}
                   className={`flex-1 sm:flex-none px-3 sm:px-4 py-2 rounded-md text-xs sm:text-sm font-bold capitalize transition-colors whitespace-nowrap ${
                     state.mode === m ? 'bg-zinc-600 text-white' : 'text-zinc-400 hover:text-white'
                   }`}
@@ -242,7 +296,10 @@ export default function OperatorView() {
                   <input
                     type="color"
                     value={state.signalColors.speedUp}
-                    onChange={e => updateState({ signalColors: { ...state.signalColors, speedUp: e.target.value }})}
+                    onChange={e => {
+                      trackColorCustomized('speed_up', state.signalColors.speedUp, e.target.value);
+                      updateState({ signalColors: { ...state.signalColors, speedUp: e.target.value }});
+                    }}
                     className="absolute inset-0 w-full h-full opacity-0 cursor-pointer"
                   />
                   <div
@@ -269,7 +326,10 @@ export default function OperatorView() {
                   <input
                     type="color"
                     value={state.signalColors.wrapUp}
-                    onChange={e => updateState({ signalColors: { ...state.signalColors, wrapUp: e.target.value }})}
+                    onChange={e => {
+                      trackColorCustomized('wrap_up', state.signalColors.wrapUp, e.target.value);
+                      updateState({ signalColors: { ...state.signalColors, wrapUp: e.target.value }});
+                    }}
                     className="absolute inset-0 w-full h-full opacity-0 cursor-pointer"
                   />
                   <div
@@ -296,7 +356,10 @@ export default function OperatorView() {
                   <input
                     type="color"
                     value={state.signalColors.timesUp}
-                    onChange={e => updateState({ signalColors: { ...state.signalColors, timesUp: e.target.value }})}
+                    onChange={e => {
+                      trackColorCustomized('times_up', state.signalColors.timesUp, e.target.value);
+                      updateState({ signalColors: { ...state.signalColors, timesUp: e.target.value }});
+                    }}
                     className="absolute inset-0 w-full h-full opacity-0 cursor-pointer"
                   />
                   <div
@@ -321,6 +384,7 @@ export default function OperatorView() {
                 className="flex-1 bg-zinc-950 border border-zinc-800 rounded-xl px-4 py-3 focus:outline-none focus:border-zinc-600"
                 onKeyDown={e => {
                   if (e.key === 'Enter') {
+                    trackCustomMessageSent(customMsg.length);
                     sendStatus(customMsg.toUpperCase(), '#ffffff');
                   }
                 }}
@@ -336,7 +400,10 @@ export default function OperatorView() {
               </motion.button>
               <motion.button
                 whileTap={{ scale: 0.95 }}
-                onClick={() => sendStatus(customMsg.toUpperCase(), '#ffffff')}
+                onClick={() => {
+                  trackCustomMessageSent(customMsg.length);
+                  sendStatus(customMsg.toUpperCase(), '#ffffff');
+                }}
                 className="bg-zinc-800 hover:bg-zinc-700 px-4 py-3 rounded-xl font-bold transition-colors"
               >
                 Send
@@ -349,7 +416,10 @@ export default function OperatorView() {
                   <div key={preset} className="flex items-center bg-zinc-800/50 hover:bg-zinc-800 border border-zinc-700/50 rounded-lg overflow-hidden transition-colors group">
                     <motion.button
                       whileTap={{ scale: 0.95 }}
-                      onClick={() => setCustomMsg(preset)}
+                      onClick={() => {
+                        trackPresetUsed(preset);
+                        setCustomMsg(preset);
+                      }}
                       className="px-3 py-1.5 text-sm text-zinc-300 hover:text-white transition-colors"
                     >
                       {preset}
@@ -446,6 +516,7 @@ export default function OperatorView() {
                 <motion.button
                   whileTap={{ scale: 0.95 }}
                   onClick={() => {
+                    trackShareLinkCopied(roomId);
                     navigator.clipboard.writeText(`${window.location.origin}/${roomId}/display`);
                     setCopied(true);
                     setTimeout(() => setCopied(false), 2000);

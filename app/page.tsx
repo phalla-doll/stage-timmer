@@ -4,6 +4,7 @@ import { useState } from 'react';
 import { useRouter } from 'next/navigation';
 import { Monitor, Settings2 } from 'lucide-react';
 import { motion } from 'motion/react';
+import { trackSessionCreated, trackSessionJoined } from '@/lib/analytics';
 
 export default function Home() {
   const [roomId, setRoomId] = useState('');
@@ -12,12 +13,14 @@ export default function Home() {
   const handleJoin = (e: React.FormEvent) => {
     e.preventDefault();
     if (roomId.trim()) {
+      trackSessionJoined(roomId);
       router.push(`/${roomId}/operator`);
     }
   };
 
   const createRoom = () => {
     const newRoomId = Math.random().toString(36).substring(2, 8).toUpperCase();
+    trackSessionCreated(newRoomId);
     router.push(`/${newRoomId}/operator`);
   };
 

@@ -1,6 +1,7 @@
 import type {Metadata} from 'next';
 import { Space_Grotesk, Plus_Jakarta_Sans } from 'next/font/google';
 import ConvexClientProvider from './ConvexClientProvider';
+import { GoogleAnalytics } from '@next/third-parties/google';
 import './globals.css'; // Global styles
 
 const spaceGrotesk = Space_Grotesk({
@@ -28,6 +29,9 @@ export default function RootLayout({children}: {children: React.ReactNode}) {
         <ConvexClientProvider>
           {children}
         </ConvexClientProvider>
+        {process.env.NODE_ENV === 'production' && process.env.NEXT_PUBLIC_GA_ID && (
+          <GoogleAnalytics gaId={process.env.NEXT_PUBLIC_GA_ID} />
+        )}
       </body>
     </html>
   );

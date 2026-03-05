@@ -1,3 +1,5 @@
+![Screenshot Preview](https://github.com/phalla-doll/stage-timmer/blob/main/public/og-image-main.png)
+
 # Stage Timer
 
 A professional, high-contrast stage timer application designed for event operators to manage speakers' time and send real-time visual signals. Built for high legibility from a distance and instant real-time synchronization.

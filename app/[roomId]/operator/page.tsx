@@ -3,7 +3,7 @@
 import { useParams, useRouter } from 'next/navigation';
 import { useStageTimer } from '@/hooks/use-stage-timer';
 import { HugeiconsIcon } from '@hugeicons/react';
-import { PlayIcon, LayerMask01Icon, PauseIcon, RefreshIcon, Tv01Icon, Settings01Icon, FlashlightIcon, KeyframesMultipleIcon, Share01Icon, Copy01Icon, Tick01Icon, Cancel01Icon, PlusSignIcon, Home01Icon } from '@hugeicons/core-free-icons';
+import { PlayIcon, LayerMask01Icon, PauseIcon, RefreshIcon, Tv01Icon, Share01Icon, Settings01Icon, FlashlightIcon, KeyframesMultipleIcon, Copy01Icon, Tick01Icon, Cancel01Icon, PlusSignIcon, Home01Icon } from '@hugeicons/core-free-icons';
 import { useState, useEffect, useCallback, Suspense, lazy } from 'react';
 import { motion } from 'motion/react';
 
@@ -162,7 +162,7 @@ export default function OperatorView() {
             >
               <HugeiconsIcon icon={Home01Icon} size={20} strokeWidth={1.5} />
             </motion.button>
-            <h1 className="text-5xl font-bold tracking-tighter text-wrap: balance">STAGE TIMER</h1>
+            <h1 className="text-4xl font-bold tracking-tighter text-wrap: balance">STAGE TIMER</h1>
           </div>
           <div className="flex items-center gap-2 text-sm text-zinc-400">
             <div className={`w-3 h-3 rounded-full ${isConnected ? 'bg-emerald-500' : 'bg-red-500'}`} />
@@ -176,13 +176,14 @@ export default function OperatorView() {
               trackShareModalOpened(roomId);
               setShowShareModal(true);
             }}
-            className="bg-zinc-800 hover:bg-zinc-700 text-white p-2.5 rounded-lg transition-colors flex items-center gap-2"
+            className="bg-zinc-700 px-4 py-2 rounded-lg transition-colors"
             title="Share Display"
             aria-label="Share Display"
           >
-            <HugeiconsIcon icon={Share01Icon} size={20} strokeWidth={1.5} />
-            <div className="bg-zinc-700 px-4 py-1.5 rounded-lg font-mono text-xl tracking-widest font-bold">
-              {roomId}
+                      <div className="font-mono tracking-widest font-bold flex gap-x-3 items-center">
+                          <HugeiconsIcon icon={Share01Icon} size={20} strokeWidth={1.5} />
+                <span><span className="text-zinc-300">Room ID:</span> {roomId}</span>
+                
             </div>
           </motion.button>
           <motion.button
@@ -527,8 +528,8 @@ export default function OperatorView() {
 
       {/* Share Modal */}
       {showShareModal && (
-        <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/80 backdrop-blur-sm p-4">
-          <div className="bg-zinc-900 border border-zinc-800 rounded-3xl p-8 max-w-sm w-full flex flex-col items-center gap-6 relative" style={{ overscrollBehavior: 'contain' }}>
+        <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/80 backdrop-blur-sm p-4" onClick={() => setShowShareModal(false)}>
+          <div className="bg-zinc-900 border border-zinc-800 rounded-3xl p-8 max-w-sm w-full flex flex-col items-center gap-6 relative" style={{ overscrollBehavior: 'contain' }} onClick={(e) => e.stopPropagation()}>
             <motion.button 
               whileTap={{ scale: 0.95 }}
               onClick={() => setShowShareModal(false)}

@@ -14,6 +14,7 @@ A professional, high-contrast stage timer application designed for event operato
 - **Visual Signals**: Send quick, color-coded signals to the speaker (e.g., "SPEED UP", "WRAP UP", "TIME'S UP"). Signal colors can be customized via a toggleable settings menu.
 - **Custom Messaging & Presets**: 
   - Type custom messages to display instantly on the screen.
+  - Inline clear button for quick message input reset.
   - Save frequently used messages as presets for one-click sending.
   - Presets are saved locally to your browser for future sessions.
 - **Display Effects**:
@@ -24,6 +25,7 @@ A professional, high-contrast stage timer application designed for event operato
 - **Broadcast-Ready Typography & Layout**: 
   - Uses *Space Grotesk* for the UI and *Plus Jakarta Sans* for perfectly tabular, highly legible timer numbers and messages.
   - Mathematically centered flex layout ensures the timer and messages are always perfectly balanced on the Y-axis.
+- **Smooth Animations**: Interactive elements feature fluid motion animations for a polished, responsive user experience.
 
 ## Tech Stack
 
@@ -31,8 +33,36 @@ A professional, high-contrast stage timer application designed for event operato
 - **Styling**: Tailwind CSS v4
 - **Real-Time Backend & Database**: [Convex](https://convex.dev/)
 - **QR Codes**: react-qr-code
-- **Icons**: Lucide React
+- **Icons**: @hugeicons/react (HugeIcons)
+- **Animations**: motion/react
+- **Analytics**: Google Analytics 4 via @next/third-parties
 - **Fonts**: Google Fonts (Space Grotesk, Plus Jakarta Sans)
+
+## Analytics & Privacy
+
+This application includes Google Analytics 4 tracking in production environments only. Tracking includes:
+- Session creation and duration
+- Timer controls (start, pause, reset, mode changes)
+- Signal and custom message sending
+- Preset management (save, remove, use)
+- Display effects toggling
+- Share modal interactions and link copying
+
+All analytics events are skipped in development environments. To enable GA4, add your tracking ID to the environment variables (see Deployment section below).
+
+## Accessibility
+
+The application includes several accessibility features:
+- Semantic HTML elements with proper ARIA labels
+- Keyboard navigation support
+- Skip to main content link
+- Focus indicators on all interactive elements
+- Screen reader-friendly form labels
+- Responsive design for various screen sizes
+
+## Social Sharing
+
+The application includes comprehensive Open Graph and Twitter Card metadata for social media sharing. The app automatically generates rich previews when shared on platforms like Twitter, LinkedIn, and Facebook.
 
 ## Getting Started
 
@@ -71,12 +101,13 @@ This application is fully compatible with Vercel. To deploy:
 1. Push your code to a GitHub repository.
 2. Import the project into Vercel.
 3. In your Vercel project settings, add the following Environment Variables (you can find these in your local `.env.local` or Convex dashboard):
-   - `NEXT_PUBLIC_CONVEX_URL`
-   - `CONVEX_DEPLOYMENT`
+    - `NEXT_PUBLIC_CONVEX_URL`
+    - `CONVEX_DEPLOYMENT`
+    - `NEXT_PUBLIC_GA_ID` (optional, for Google Analytics 4 tracking)
 4. **Important**: Update your Vercel Build Command to deploy the Convex functions alongside your Next.js app:
-   ```bash
-   npx convex deploy --cmd 'npm run build'
-   ```
+    ```bash
+    npx convex deploy --cmd 'npm run build'
+    ```
 5. Deploy!
 
 ## Usage

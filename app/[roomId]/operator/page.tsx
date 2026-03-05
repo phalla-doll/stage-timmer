@@ -2,7 +2,7 @@
 
 import { useParams, useRouter } from 'next/navigation';
 import { useStageTimer } from '@/hooks/use-stage-timer';
-import { Play, Pause, RotateCcw, Monitor, Settings, AlertTriangle, MessageSquare, Zap, Sparkles, Share, Copy, Check, X, Plus } from 'lucide-react';
+import { Play, Pause, RotateCcw, Monitor, Settings, AlertTriangle, MessageSquare, Zap, Sparkles, Share, Copy, Check, X, Plus, Home } from 'lucide-react';
 import { useState, useEffect } from 'react';
 import QRCode from 'react-qr-code';
 import { motion } from 'motion/react';
@@ -104,8 +104,18 @@ export default function OperatorView() {
       {/* Header */}
       <header className="flex flex-col sm:flex-row items-center justify-between bg-zinc-900 p-4 rounded-2xl border border-zinc-800 gap-4 sm:gap-0">
         <div className="flex items-center gap-4 w-full sm:w-auto justify-between sm:justify-start">
-          <div className="bg-zinc-800 px-4 py-2 rounded-lg font-mono text-xl tracking-widest font-bold">
-            {roomId}
+          <div className="flex items-center gap-2">
+            <motion.button
+              whileTap={{ scale: 0.95 }}
+              onClick={() => router.push('/')}
+              className="bg-zinc-800 hover:bg-zinc-700 text-zinc-400 hover:text-white p-2 rounded-lg transition-colors"
+              title="Back to Home"
+            >
+              <Home className="w-5 h-5" />
+            </motion.button>
+            <div className="bg-zinc-800 px-4 py-2 rounded-lg font-mono text-xl tracking-widest font-bold">
+              {roomId}
+            </div>
           </div>
           <div className="flex items-center gap-2 text-sm text-zinc-400">
             <div className={`w-3 h-3 rounded-full ${isConnected ? 'bg-emerald-500' : 'bg-red-500'}`} />

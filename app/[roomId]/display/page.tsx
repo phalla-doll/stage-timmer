@@ -2,7 +2,7 @@
 
 import { useParams } from 'next/navigation';
 import { useStageTimer } from '@/hooks/use-stage-timer';
-import { useEffect, useState } from 'react';
+import { useEffect, useState, useCallback } from 'react';
 import { motion, AnimatePresence } from 'motion/react';
 
 export default function DisplayView() {
@@ -20,13 +20,13 @@ export default function DisplayView() {
     };
   }, []);
 
-  const formatTime = (seconds: number) => {
+  const formatTime = useCallback((seconds: number) => {
     const absSeconds = Math.abs(seconds);
     const m = Math.floor(absSeconds / 60);
     const s = absSeconds % 60;
     const sign = seconds < 0 ? '-' : '';
     return `${sign}${m.toString().padStart(2, '0')}:${s.toString().padStart(2, '0')}`;
-  };
+  }, []);
 
   // If invertColors is true, we swap black and white
   const bgClass = state.invertColors ? 'bg-white' : 'bg-black';
@@ -55,7 +55,7 @@ export default function DisplayView() {
   const timerColor = isOvertime ? 'text-red-500' : textClass;
 
   return (
-    <div className={`relative overflow-hidden min-h-screen ${bgClass} ${textClass} flex flex-col items-center justify-between p-8 font-sans transition-colors duration-300 ${isFlashing ? 'opacity-0' : 'opacity-100'}`}>
+    <div className={`relative overflow-hidden min-h-screen ${bgClass} ${textClass} flex flex-col items-center justify-between p-8 font-sans transition-colors duration-300 ${isFlashing ? 'opacity-0' : 'opacity-100'}`} role="main" aria-live="polite">
       
       {/* Animated Background Layer */}
       {state.showAnimation && state.message && (
@@ -77,7 +77,7 @@ export default function DisplayView() {
               animate={{ scale: 1, opacity: 1 }}
               exit={{ scale: 0.95, opacity: 0 }}
               transition={{ type: 'spring', stiffness: 300, damping: 25 }}
-              className="text-6xl md:text-8xl lg:text-[8rem] font-mono font-bold tracking-tighter uppercase text-center leading-none"
+              className="text-6xl md:text-8xl lg:text-[8rem] font-mono font-bold tracking-tighter uppercase text-center leading-none text-wrap: balance"
               style={{ color: state.messageColor }}
             >
               {state.message}

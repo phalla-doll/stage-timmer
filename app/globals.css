@@ -24,3 +24,9 @@ body {
 .animate-breathe {
   animation: breathe 4s ease-in-out infinite;
 }
+
+@media (prefers-reduced-motion: reduce) {
+  .animate-breathe {
+    animation: none;
+  }
+}

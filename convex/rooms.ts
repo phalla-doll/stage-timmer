@@ -20,12 +20,20 @@ const DEFAULT_ROOM = {
   },
 };
 
+type RoomMode = 'countdown' | 'countup' | 'clock';
+type RoomStatus = 'running' | 'paused';
+type SignalColors = {
+  speedUp: string;
+  wrapUp: string;
+  timesUp: string;
+};
+
 export const get = query({
   args: { roomId: v.string() },
   handler: async (ctx, args) => {
     return await ctx.db
       .query("rooms")
-      .withIndex("by_roomId", (q) => q.eq("roomId", args.roomId))
+      .withIndex("by_roomId", (q) => q.eq("roomId", (args as any).roomId))
       .first();
   },
 });

@@ -17,6 +17,28 @@ const plusJakartaSans = Plus_Jakarta_Sans({
 export const metadata: Metadata = {
   title: 'Stage Timer',
   description: 'A high-contrast stage timer for operators to signal speakers.',
+  keywords: 'stage timer, presentation timer, speaker timer, countdown, event timer, conference timer',
+  authors: [{ name: 'Stage Timer' }],
+  metadataBase: new URL('https://stage-timmer.vercel.app/'),
+  openGraph: {
+    title: 'Stage Timer',
+    description: 'A high-contrast stage timer for operators to signal speakers.',
+    url: 'https://stage-timmer.vercel.app/',
+    siteName: 'Stage Timer',
+    images: [{
+      url: '/og-image-main.png',
+      width: 1200,
+      height: 630,
+      alt: 'Stage Timer - Professional stage timer for speakers and presentations',
+    }],
+    type: 'website',
+  },
+  twitter: {
+    card: 'summary_large_image',
+    title: 'Stage Timer',
+    description: 'A high-contrast stage timer for operators to signal speakers.',
+    images: ['/og-image-main.png'],
+  },
   icons: {
     icon: '/favicon.svg',
   },

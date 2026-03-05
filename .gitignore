@@ -7,3 +7,4 @@ coverage/
 !.env.example
 .idea/*
 convex/_generated/
+tsconfig.tsbuildinfo

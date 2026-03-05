@@ -42,6 +42,7 @@ export default function OperatorView() {
   const [showColorPickers, setShowColorPickers] = useState(false);
   const [showShareModal, setShowShareModal] = useState(false);
   const [copied, setCopied] = useState(false);
+  const [messageSent, setMessageSent] = useState(false);
   const [presets, setPresets] = useState<string[]>(() => {
     const saved = localStorage.getItem('stage-timer-presets');
     if (saved) {
@@ -390,20 +391,33 @@ export default function OperatorView() {
             <h3 className="text-sm font-bold text-zinc-500 uppercase tracking-wider text-wrap: balance">Custom Message</h3>
             <div className="flex gap-2">
               <label htmlFor="custom-message-input" className="sr-only">Custom Message</label>
-              <input
-                id="custom-message-input"
-                type="text"
-                value={customMsg}
-                onChange={e => setCustomMsg(e.target.value)}
-                placeholder="Enter message..."
-                className="flex-1 bg-zinc-950 border border-zinc-800 rounded-xl px-4 py-3 focus:outline-none focus-visible:ring-2 focus-visible:ring-zinc-400 focus-visible:ring-offset-2 focus-visible:ring-offset-zinc-950"
-                onKeyDown={e => {
-                  if (e.key === 'Enter') {
-                    trackCustomMessageSent(customMsg.length);
-                    sendStatus(customMsg.toUpperCase(), '#ffffff');
-                  }
-                }}
-              />
+              <div className="relative flex-1">
+                <input
+                  id="custom-message-input"
+                  type="text"
+                  value={customMsg}
+                  onChange={e => setCustomMsg(e.target.value)}
+                  placeholder="Enter message..."
+                  className="w-full bg-zinc-950 border border-zinc-800 rounded-xl px-4 py-3 pr-10 focus:outline-none focus-visible:ring-2 focus-visible:ring-zinc-400 focus-visible:ring-offset-2 focus-visible:ring-offset-zinc-950"
+                  onKeyDown={e => {
+                    if (e.key === 'Enter') {
+                      trackCustomMessageSent(customMsg.length);
+                      sendStatus(customMsg.toUpperCase(), '#ffffff');
+                    }
+                  }}
+                />
+                {customMsg.trim() && (
+                  <motion.button
+                    whileTap={{ scale: 0.9 }}
+                    onClick={() => setCustomMsg('')}
+                    className="absolute right-3 top-1/2 -translate-y-1/2 text-zinc-500 hover:text-white transition-colors"
+                    title="Clear input"
+                    aria-label="Clear input"
+                  >
+                    <HugeiconsIcon icon={Cancel01Icon} size={16} strokeWidth={1.5} />
+                  </motion.button>
+                )}
+              </div>
               <motion.button
                 whileTap={{ scale: 0.95 }}
                 onClick={savePreset}
@@ -415,14 +429,24 @@ export default function OperatorView() {
                 <HugeiconsIcon icon={PlusSignIcon} size={20} strokeWidth={1.5} />
               </motion.button>
               <motion.button
-                whileTap={{ scale: 0.95 }}
+                whileTap={messageSent ? undefined : { scale: 0.95 }}
                 onClick={() => {
                   trackCustomMessageSent(customMsg.length);
                   sendStatus(customMsg.toUpperCase(), '#ffffff');
+                  setMessageSent(true);
+                  setTimeout(() => setMessageSent(false), 2000);
                 }}
-                className="bg-zinc-800 hover:bg-zinc-700 px-4 py-3 rounded-xl font-bold transition-colors"
+                disabled={messageSent}
+                className="bg-zinc-800 hover:bg-zinc-700 disabled:opacity-50 disabled:cursor-not-allowed px-4 py-3 rounded-xl font-bold transition-colors flex items-center gap-2"
               >
-                Send
+                {messageSent ? (
+                  <>
+                    <HugeiconsIcon icon={Tick01Icon} size={20} strokeWidth={1.5} color="#10b981" />
+                    Sent
+                  </>
+                ) : (
+                  'Send'
+                )}
               </motion.button>
             </div>
             

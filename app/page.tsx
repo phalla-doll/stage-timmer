@@ -2,7 +2,8 @@
 
 import { useState } from 'react';
 import { useRouter } from 'next/navigation';
-import { Monitor, Settings2 } from 'lucide-react';
+import { HugeiconsIcon } from '@hugeicons/react';
+import { Tv01Icon, PlusSignSquareIcon } from '@hugeicons/core-free-icons';
 import { motion } from 'motion/react';
 import { trackSessionCreated, trackSessionJoined } from '@/lib/analytics';
 
@@ -38,7 +39,7 @@ export default function Home() {
             onClick={createRoom}
             className="w-full bg-white text-black font-bold text-lg py-4 rounded-xl hover:bg-zinc-200 transition-colors flex items-center justify-center gap-2"
           >
-            <Settings2 className="w-6 h-6" />
+            <HugeiconsIcon icon={PlusSignSquareIcon} size={24} strokeWidth={1.5} />
             Create New Session
           </motion.button>
 
@@ -68,7 +69,7 @@ export default function Home() {
               disabled={!roomId.trim()}
               className="w-full bg-zinc-800 text-white font-bold text-lg py-4 rounded-xl hover:bg-zinc-700 transition-colors disabled:opacity-50 disabled:cursor-not-allowed flex items-center justify-center gap-2"
             >
-              <Monitor className="w-6 h-6" />
+              <HugeiconsIcon icon={Tv01Icon} size={24} strokeWidth={1.5} />
               Join Session
             </motion.button>
           </form>

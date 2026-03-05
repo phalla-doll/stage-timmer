@@ -2,7 +2,8 @@
 
 import { useParams, useRouter } from 'next/navigation';
 import { useStageTimer } from '@/hooks/use-stage-timer';
-import { Play, Pause, RotateCcw, Monitor, Settings, AlertTriangle, MessageSquare, Zap, Sparkles, Share, Copy, Check, X, Plus, Home } from 'lucide-react';
+import { HugeiconsIcon } from '@hugeicons/react';
+import { PlayIcon, LayerMask01Icon, PauseIcon, RefreshIcon, Tv01Icon, Settings01Icon, FlashlightIcon, KeyframesMultipleIcon, Share01Icon, Copy01Icon, Tick01Icon, Cancel01Icon, PlusSignIcon, Home01Icon } from '@hugeicons/core-free-icons';
 import { useState, useEffect } from 'react';
 import QRCode from 'react-qr-code';
 import { motion } from 'motion/react';
@@ -156,7 +157,7 @@ export default function OperatorView() {
               className="bg-zinc-800 hover:bg-zinc-700 text-zinc-400 hover:text-white p-2 rounded-lg transition-colors"
               title="Back to Home"
             >
-              <Home className="w-5 h-5" />
+              <HugeiconsIcon icon={Home01Icon} size={20} strokeWidth={1.5} />
             </motion.button>
             <div className="bg-zinc-800 px-4 py-2 rounded-lg font-mono text-xl tracking-widest font-bold">
               {roomId}
@@ -177,7 +178,7 @@ export default function OperatorView() {
             className="bg-zinc-800 hover:bg-zinc-700 text-white p-2 rounded-lg transition-colors"
             title="Share Display"
           >
-            <Share className="w-5 h-5" />
+            <HugeiconsIcon icon={Share01Icon} size={20} strokeWidth={1.5} />
           </motion.button>
           <motion.button
             whileTap={{ scale: 0.95 }}
@@ -187,7 +188,7 @@ export default function OperatorView() {
             }}
             className="bg-indigo-600 hover:bg-indigo-500 text-white px-4 py-2 rounded-lg font-semibold flex items-center gap-2 transition-colors"
           >
-            <Monitor className="w-5 h-5" />
+            <HugeiconsIcon icon={Tv01Icon} size={20} strokeWidth={1.5} />
             <span className="hidden sm:inline">Open Display</span>
           </motion.button>
         </div>
@@ -231,7 +232,7 @@ export default function OperatorView() {
                   onClick={resetTimer}
                   className="w-16 h-16 rounded-full bg-zinc-800 hover:bg-zinc-700 flex items-center justify-center transition-colors"
                 >
-                  <RotateCcw className="w-8 h-8" />
+                  <HugeiconsIcon icon={RefreshIcon} size={32} strokeWidth={1.5} />
                 </motion.button>
                 <motion.button
                   whileTap={{ scale: 0.95 }}
@@ -240,7 +241,7 @@ export default function OperatorView() {
                     state.isRunning ? 'bg-amber-500 hover:bg-amber-400 text-black' : 'bg-emerald-500 hover:bg-emerald-400 text-black'
                   }`}
                 >
-                  {state.isRunning ? <Pause className="w-12 h-12 fill-current" /> : <Play className="w-12 h-12 fill-current ml-2" />}
+                  {state.isRunning ? <HugeiconsIcon icon={PauseIcon} size={48} strokeWidth={1.5} /> : <HugeiconsIcon icon={PlayIcon} size={48} strokeWidth={1.5} className="ml-2" />}
                 </motion.button>
               </div>
             )}
@@ -277,7 +278,7 @@ export default function OperatorView() {
               className={`p-2 rounded-lg transition-colors ${showColorPickers ? 'bg-zinc-800 text-white' : 'text-zinc-500 hover:bg-zinc-800 hover:text-zinc-300'}`}
               title="Toggle Signal Colors"
             >
-              <Settings className="w-5 h-5" />
+              <HugeiconsIcon icon={Settings01Icon} size={20} strokeWidth={1.5} />
             </motion.button>
           </div>
 
@@ -396,7 +397,7 @@ export default function OperatorView() {
                 className="bg-zinc-800 hover:bg-zinc-700 disabled:opacity-50 disabled:cursor-not-allowed px-3 py-3 rounded-xl transition-colors flex items-center justify-center"
                 title="Save as preset"
               >
-                <Plus className="w-5 h-5 text-zinc-300" />
+                <HugeiconsIcon icon={PlusSignIcon} size={20} strokeWidth={1.5} />
               </motion.button>
               <motion.button
                 whileTap={{ scale: 0.95 }}
@@ -430,7 +431,7 @@ export default function OperatorView() {
                       className="px-2 py-1.5 text-zinc-500 hover:text-red-400 hover:bg-zinc-700 transition-colors"
                       title="Remove preset"
                     >
-                      <X className="w-3.5 h-3.5" />
+                      <HugeiconsIcon icon={Cancel01Icon} size={14} strokeWidth={1.5} />
                     </motion.button>
                   </div>
                 ))}
@@ -448,7 +449,7 @@ export default function OperatorView() {
                   state.flash ? 'bg-white text-black' : 'bg-zinc-800 text-white hover:bg-zinc-700'
                 }`}
               >
-                <Zap className="w-5 h-5" />
+                <HugeiconsIcon icon={FlashlightIcon} size={20} strokeWidth={1.5} />
                 <span className="hidden sm:inline">Flash</span>
               </motion.button>
               <motion.button
@@ -458,7 +459,7 @@ export default function OperatorView() {
                   state.invertColors ? 'bg-white text-black' : 'bg-zinc-800 text-white hover:bg-zinc-700'
                 }`}
               >
-                <Monitor className="w-5 h-5" />
+            <HugeiconsIcon icon={LayerMask01Icon} size={20} strokeWidth={1.5} />
                 <span className="hidden sm:inline">Invert</span>
               </motion.button>
               <motion.button
@@ -468,7 +469,7 @@ export default function OperatorView() {
                   state.showAnimation ? 'bg-white text-black' : 'bg-zinc-800 text-white hover:bg-zinc-700'
                 }`}
               >
-                <Sparkles className="w-5 h-5" />
+                <HugeiconsIcon icon={KeyframesMultipleIcon} size={20} strokeWidth={1.5} />
                 <span className="hidden sm:inline">Animate</span>
               </motion.button>
             </div>
@@ -492,7 +493,7 @@ export default function OperatorView() {
               onClick={() => setShowShareModal(false)}
               className="absolute top-4 right-4 text-zinc-500 hover:text-white transition-colors"
             >
-              <X className="w-6 h-6" />
+              <HugeiconsIcon icon={Cancel01Icon} size={24} strokeWidth={1.5} />
             </motion.button>
             
             <div className="text-center space-y-2">
@@ -523,7 +524,7 @@ export default function OperatorView() {
                   }}
                   className="bg-zinc-800 hover:bg-zinc-700 px-4 py-3 rounded-xl transition-colors flex items-center justify-center"
                 >
-                  {copied ? <Check className="w-5 h-5 text-emerald-500" /> : <Copy className="w-5 h-5 text-white" />}
+                  {copied ? <HugeiconsIcon icon={Tick01Icon} size={20} strokeWidth={1.5} color="#10b981" /> : <HugeiconsIcon icon={Copy01Icon} size={20} strokeWidth={1.5} />}
                 </motion.button>
               </div>
             </div>

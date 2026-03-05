@@ -118,7 +118,7 @@ export function useStageTimer(roomId: string) {
     messageColor: room?.messageColor || '#ffffff',
     flash: room?.flash || false,
     invertColors: room?.invertColors || false,
-    showAnimation: room?.showAnimation || false,
+    showAnimation: room?.showAnimation ?? true,
     signalColors: room?.signalColors || {
       speedUp: '#fbbf24',
       wrapUp: '#f97316',

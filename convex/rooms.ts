@@ -12,7 +12,7 @@ const DEFAULT_ROOM = {
   messageColor: '#ffffff',
   flash: false,
   invertColors: false,
-  showAnimation: false,
+  showAnimation: true,
   signalColors: {
     speedUp: '#fbbf24',
     wrapUp: '#f97316',

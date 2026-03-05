@@ -203,7 +203,7 @@ export default function OperatorView() {
         <main className="lg:col-span-2 bg-zinc-900 rounded-3xl border border-zinc-800 p-4 sm:p-6 flex flex-col" role="main" id="main-content">
           <div className="flex flex-col sm:flex-row justify-between items-start sm:items-center mb-8 gap-4 sm:gap-0">
             <h2 className="text-2xl font-bold text-zinc-400">Timer Control</h2>
-            <div className="flex bg-zinc-800 rounded-lg p-1 w-full sm:w-auto overflow-x-auto">
+            <div className="flex bg-zinc-800 rounded-xl p-1 w-full sm:w-auto overflow-x-auto">
               {(['countdown', 'countup', 'clock'] as const).map(m => (
                 <motion.button
                   whileTap={{ scale: 0.95 }}
@@ -212,7 +212,7 @@ export default function OperatorView() {
                     trackTimerModeChanged(m);
                     updateState({ mode: m, isRunning: false });
                   }}
-                  className={`flex-1 sm:flex-none px-3 sm:px-4 py-2 rounded-md text-xs sm:text-sm font-bold capitalize transition-colors whitespace-nowrap focus-visible:ring-2 focus-visible:ring-zinc-400 focus-visible:ring-offset-2 focus-visible:ring-offset-zinc-900 ${
+                  className={`flex-1 sm:flex-none px-3 sm:px-4 py-2 rounded-xl text-xs sm:text-sm font-bold capitalize transition-colors whitespace-nowrap focus-visible:ring-2 focus-visible:ring-zinc-400 focus-visible:ring-offset-2 focus-visible:ring-offset-zinc-900 ${
                     state.mode === m ? 'bg-zinc-600 text-white' : 'text-zinc-400 hover:text-white'
                   }`}
                 >
